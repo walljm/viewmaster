@@ -20,6 +20,11 @@ public class Coordinate : IEquatable<Coordinate>
     public ushort Y => this.y;
     public ushort TiltCoordinate => this.y;
 
+    public static implicit operator Coordinate(Degrees p)
+    {
+        return new Coordinate(Convert.ToUInt16(p.X * (1 / (ushort.MaxValue / 360.0))), Convert.ToUInt16(p.Y * (1 / (ushort.MaxValue / 360.0))));
+    }
+
     public static Coordinate operator +(Coordinate pt, Coordinate sz) => Add(pt, sz);
 
     public static Coordinate operator -(Coordinate pt, Coordinate sz) => Subtract(pt, sz);

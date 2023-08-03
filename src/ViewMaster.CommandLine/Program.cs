@@ -42,17 +42,20 @@ namespace ViewMaster.CommandLine
 
             #endregion CommandLine Handling
 
-            var writers = new List<IWriter>(); // { new PtzWriter(IPAddress.Parse("10.101.0.174")) };
+            var writers = new List<IWriter>();
             foreach (var ip in opts.Cameras)
             {
                 writers.Add(new PtzWriter(IPAddress.Parse(ip)));
             }
 
-            var cue1 = new Cue(1, "Cue1", writers, new CircleOperation(TimeSpan.FromSeconds(30), 0.25));
-            var cue2 = new Cue(2, "Cue2", writers, new PanOperation(new Coordinate(8000, 8000), 95, TimeSpan.FromSeconds(10), 0.25));
-            var cue3 = new Cue(3, "Cue3", writers, new MoveOperation(new Coordinate(8000, 8000), 80));
+            var sequence = new Sequence("Run in a circle", new List<Cue> {
+                //new Cue(1, "Cue1", writers, new CircleOperation(TimeSpan.FromSeconds(30), 0.25)),
 
-            var sequence = new Sequence("Run in a circle", new List<Cue> { cue1, cue2, cue3 });
+                // set zoom to a specific level
+                new Cue(1, "Zoom", writers, new ZoomOperation(1000)),
+                new Cue(2, "Pan Left", writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10)),
+                new Cue(3, "Move", writers, new MoveOperation(new Degrees(180, 90))),
+            });
 
             var session = new Session(sequence);
             while (await session.FireNextCue())

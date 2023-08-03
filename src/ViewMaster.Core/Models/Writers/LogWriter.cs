@@ -17,15 +17,33 @@ public class LogWriter : IWriter
         return Task.CompletedTask;
     }
 
-    public Task SendPositionAbsolute(Coordinate coordinate, ushort? speed)
+    public Task SendPanTiltZoom(short panSpeed, short tiltSpeed, short zoomSpeed)
+    {
+        Debug.WriteLine($"Pan: {panSpeed}, Tilt: {tiltSpeed}, Zoom: {zoomSpeed}");
+        return Task.CompletedTask;
+    }
+
+    public Task SendPositionAbsolute(Coordinate coordinate)
+    {
+        Debug.WriteLine($"Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate}");
+        return Task.CompletedTask;
+    }
+
+    public Task SendPositionSpeedAbsolute(Coordinate coordinate, ushort? speed)
     {
         Debug.WriteLine($"Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate}, Speed: {speed}");
         return Task.CompletedTask;
     }
 
-    public Task SendPositionRelative(Coordinate coordinate, ushort? speed)
+    public Task SendPositionRelative(Coordinate coordinate)
     {
-        Debug.WriteLine($"Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate}, Speed: {speed}");
+        Debug.WriteLine($"Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate}");
+        return Task.CompletedTask;
+    }
+
+    public Task SendZoomAbsolute(ushort speed)
+    {
+        Debug.WriteLine($"Speed: {speed}");
         return Task.CompletedTask;
     }
 }

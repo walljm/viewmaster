@@ -8,7 +8,13 @@ public interface IWriter
 
     Task SendPanTilt(short panSpeed, short tiltSpeed);
 
-    Task SendPositionAbsolute(Coordinate coordinate, ushort? speed);
+    Task SendPanTiltZoom(short panSpeed, short tiltSpeed, short zoom);
 
-    Task SendPositionRelative(Coordinate coordinate, ushort? speed);
+    Task SendPositionAbsolute(Coordinate coordinate);
+
+    Task SendPositionSpeedAbsolute(Coordinate coordinate, ushort? speed);
+
+    Task SendPositionRelative(Coordinate coordinate);
+
+    Task SendZoomAbsolute(ushort speed);
 }

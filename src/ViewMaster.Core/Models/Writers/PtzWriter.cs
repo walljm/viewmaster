@@ -44,6 +44,25 @@ public class PtzWriter : IDisposable, IWriter
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23PTS{psp}{tsp}&res=1");
     }
 
+    public async Task SendPanTiltZoom(short panSpeed, short tiltSpeed, short zoomSpeed)
+    {
+        // we expect a number 0 - 49. 0 being stop, 1 being slow progressing faster to up to the max sdpeed of 49.
+        if (panSpeed < -49 || panSpeed > 49 || tiltSpeed < -49 || tiltSpeed > 49 || zoomSpeed < -49 || zoomSpeed > 49)
+        {
+            throw new ArgumentOutOfRangeException("Speed must be between -49 and 49");
+        }
+
+        // Panasonic uses 50 as 0.  Why?  who knows...
+        var psp = (panSpeed + 50).ToString().PadLeft(2, '0'); // shift decimal to the right by 50
+        var tsp = (tiltSpeed + 50).ToString().PadLeft(2, '0'); // shift decimal to the right by 50
+        var zsp = (zoomSpeed + 50).ToString().PadLeft(2, '0'); // shift decimal to the right by 50
+
+        // send the api call
+        _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23PTS{psp}{tsp}&res=1");
+        Thread.Sleep(135); // don't send operations too fast.
+        _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23Z{zsp}&res=1");
+    }
+
     public async Task SendAction(Action action, short speed)
     {
         var op = action switch
@@ -61,13 +80,28 @@ public class PtzWriter : IDisposable, IWriter
         }
 
         // Panasonic uses 50 as 0.  Why?  who knows...
-        var sp = speed + 50; // shift decimal to the right by 50
+        var sp = (speed + 50).ToString().PadLeft(2, '0'); // shift decimal to the right by 50
 
         // send the api call
-        _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23{op}{sp.ToString().PadLeft(2, '0')}&res=1");
+        _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23{op}{sp}&res=1");
     }
 
-    public async Task SendPositionAbsolute(Coordinate coordinate, ushort? speed)
+    public async Task SendPositionAbsolute(Coordinate coordinate)
+    {
+        // send the api call
+        var pan = coordinate.PanCoordinate.ToString("X").PadLeft(4, '0');
+        var tilt = coordinate.TiltCoordinate.ToString("X").PadLeft(4, '0');
+        _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23APC{pan}{tilt}&res=1");
+    }
+
+    public async Task SendPositionRelative(Coordinate coordinate)
+    {
+        var pan = coordinate.PanCoordinate.ToString("X").PadLeft(4, '0');
+        var tilt = coordinate.TiltCoordinate.ToString("X").PadLeft(4, '0');
+        _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23RPC{pan}{tilt}&res=1");
+    }
+
+    public async Task SendPositionSpeedAbsolute(Coordinate coordinate, ushort? speed)
     {
         if (speed > 90)
         {
@@ -91,34 +125,18 @@ public class PtzWriter : IDisposable, IWriter
             _ when speed > 60 && speed <= 90 => (speed - 60)?.ToString("X").PadLeft(2, '0'),
             _ => string.Empty,
         };
-        _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23APC{pan}{tilt}{spd}{tbl}&res=1");
+        _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23APS{pan}{tilt}{spd}{tbl}&res=1");
     }
 
-    public async Task SendPositionRelative(Coordinate coordinate, ushort? speed)
+    public async Task SendZoomAbsolute(ushort zoom)
     {
-        if (speed > 90)
+        if (zoom < 0 || zoom > 2730)
         {
-            throw new ArgumentException(nameof(speed), "Speed must be a value between 1 and 90");
+            throw new ArgumentException(nameof(zoom), "Zoom value must be between 0 and 2730.");
         }
-
         // send the api call
-        var pan = coordinate.PanCoordinate.ToString("X").PadLeft(4, '0');
-        var tilt = coordinate.TiltCoordinate.ToString("X").PadLeft(4, '0');
-        var tbl = speed switch
-        {
-            _ when speed <= 30 => "0",
-            _ when speed > 30 && speed <= 60 => "1",
-            _ when speed > 60 && speed <= 90 => "2",
-            _ => string.Empty,
-        };
-        var spd = speed switch
-        {
-            _ when speed <= 30 => speed?.ToString("X").PadLeft(2, '0'),
-            _ when speed > 30 && speed <= 60 => (speed - 30)?.ToString("X").PadLeft(2, '0'),
-            _ when speed > 60 && speed <= 90 => (speed - 60)?.ToString("X").PadLeft(2, '0'),
-            _ => string.Empty,
-        };
-        _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23RPC{pan}{tilt}{spd}{tbl}&res=1");
+        var zm = (zoom + 1365).ToString("X").PadLeft(3, '0');
+        _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23AXZ{zm}&res=1");
     }
 
     protected virtual void Dispose(bool disposing)

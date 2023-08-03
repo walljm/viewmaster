@@ -10,6 +10,8 @@ public class PanOperation : IOperation
     private readonly Coordinate start;
     private readonly TimeSpan timeSpan;
     private readonly double scale;
+    private readonly short zoom;
+
     private readonly double absSlope;
     private readonly int panDir;
     private readonly int tiltDir;
@@ -22,7 +24,7 @@ public class PanOperation : IOperation
     /// <param name="timeSpan">How long to move the camera</param>
     /// <param name="scale">How fast to move, 1 being MAX, 0.1 being MIN</param>
     /// <exception cref="ArgumentException"></exception>
-    public PanOperation(Coordinate start, Coordinate stop, TimeSpan timeSpan, double scale)
+    public PanOperation(Degrees start, Degrees stop, TimeSpan timeSpan, double scale, short zoom = 0)
     {
         if (scale < 0 || scale > 1)
         {
@@ -31,9 +33,10 @@ public class PanOperation : IOperation
 
         this.start = start;
         this.timeSpan = timeSpan;
-
-        var panOffset = stop.PanCoordinate - this.start.PanCoordinate;
-        var tiltOffset = stop.TiltCoordinate - this.start.TiltCoordinate
+        this.zoom = zoom;
+        var stopCoord = (Coordinate)stop;
+        var panOffset = stopCoord.PanCoordinate - this.start.PanCoordinate;
+        var tiltOffset = stopCoord.TiltCoordinate - this.start.TiltCoordinate
                          + 0.00001; // hack to prevent divide by 0
 
         this.absSlope = Math.Abs(tiltOffset / panOffset); // y/x
@@ -49,18 +52,21 @@ public class PanOperation : IOperation
     /// <param name="timeSpan">How long to move the camera</param>
     /// <param name="scale">How fast to move, 1 being MAX, 0.1 being MIN</param>
     /// <exception cref="ArgumentException"></exception>
-    public PanOperation(Coordinate start, double angle, TimeSpan timeSpan, double scale)
+    public PanOperation(Degrees start, double angle, TimeSpan timeSpan, double scale, short zoom = 0)
     {
         if (scale < 0 || scale > 1)
         {
             throw new ArgumentException(nameof(scale), "Speed must be a value between 0.1 and 1");
         }
+
         this.start = start;
         this.timeSpan = timeSpan;
+        this.scale = scale;
+        this.zoom = zoom;
 
         this.absSlope = Math.Abs(Math.Tan((90 - angle) / 180 * Math.PI));
-        this.panDir = angle > 180 ? -1 : 1;
-        this.tiltDir = angle > 90 || angle < 270 ? -1 : 1;
+        this.panDir = angle > 180 && angle < 360 ? -1 : 1;
+        this.tiltDir = angle < 90 || angle > 270 ? 1 : -1;
     }
 
     public async Task Execute(IWriter writer)
@@ -70,14 +76,17 @@ public class PanOperation : IOperation
         var tiltSpd = Convert.ToInt16((absSlope > 1 ? max : max * absSlope) * tiltDir);
 
         // move camera to first position
-        await writer.SendPositionAbsolute(this.start, 90);
+        await writer.SendPositionAbsolute(this.start);
+        Thread.Sleep(1000);
 
-        await writer.SendPanTilt(panSpd, tiltSpd);
+        await writer.SendPanTiltZoom(panSpd, tiltSpd, this.zoom);
 
         // wait for the allotted time.
         Thread.Sleep(Convert.ToInt32(this.timeSpan.TotalMilliseconds));
 
-        // stop moving
-        await writer.SendPanTilt(0, 0);
+        // stop moving.  send twice just to make sure you get it
+        await writer.SendPanTiltZoom(0, 0, 0);
+        Thread.Sleep(135);
+        await writer.SendPanTiltZoom(0, 0, 0);
     }
 }
