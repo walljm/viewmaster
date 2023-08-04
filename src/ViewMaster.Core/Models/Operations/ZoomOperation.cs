@@ -22,6 +22,9 @@ public class ZoomOperation : IOperation
 
     public async Task Execute(IWriter writer, CancellationToken cancellationToken)
     {
+        await writer.SendStop();
+        await Task.Delay(135, cancellationToken);
+
         if (cancellationToken.IsCancellationRequested) { return; }
         await writer.SendZoomAbsolute(this.speed);
     }

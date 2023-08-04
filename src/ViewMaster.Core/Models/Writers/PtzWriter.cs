@@ -139,6 +139,13 @@ public class PtzWriter : IDisposable, IWriter
         _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23AXZ{zm}&res=1");
     }
 
+    public async Task SendStop()
+    {
+        _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23PTS5050&res=1");
+        Thread.Sleep(135); // don't send operations too fast.
+        _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23Z50&res=1");
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -158,4 +165,5 @@ public class PtzWriter : IDisposable, IWriter
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
+
 }

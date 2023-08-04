@@ -17,4 +17,6 @@ public interface IWriter
     Task SendPositionRelative(Coordinate coordinate);
 
     Task SendZoomAbsolute(ushort speed);
+
+    Task SendStop();
 }

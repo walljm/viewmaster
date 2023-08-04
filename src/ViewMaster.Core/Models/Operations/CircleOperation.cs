@@ -34,34 +34,31 @@ public class CircleOperation : IOperation
 
     public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
-        try
+        await writer.SendStop();
+        await Task.Delay(135, cancellationToken);
+
+        var iterations = Math.Round(this.timeSpan.TotalMilliseconds / increment, 0);
+        var time = iterations * increment; // 10 seconds
+
+        for (var i = 0; i < time; i += increment)
         {
-            var iterations = Math.Round(this.timeSpan.TotalMilliseconds / increment, 0);
-            var time = iterations * increment; // 10 seconds
+            if (cancellationToken.IsCancellationRequested) { break; }
 
-            for (var i = 0; i < time; i += increment)
-            {
-                if (cancellationToken.IsCancellationRequested) { break; }
+            // step size of the angle
+            var dtheta = 2 * Math.PI / iterations;
 
-                // step size of the angle
-                var dtheta = 2 * Math.PI / iterations;
+            // angle
+            var theta = dtheta * (i / increment);
 
-                // angle
-                var theta = dtheta * (i / increment);
+            var xspeed = Math.Sin(theta) * maxSpeed * this.scale * -1;
+            var yspeed = Math.Cos(theta) * maxSpeed * this.scale;
 
-                var xspeed = Math.Sin(theta) * maxSpeed * this.scale * -1;
-                var yspeed = Math.Cos(theta) * maxSpeed * this.scale;
+            var panSpeed = Convert.ToInt16(Math.Round(xspeed));
+            var tiltSpeed = Convert.ToInt16(Math.Round(yspeed));
 
-                var panSpeed = Convert.ToInt16(Math.Round(xspeed));
-                var tiltSpeed = Convert.ToInt16(Math.Round(yspeed));
-
-                await writer.SendPanTilt(panSpeed, tiltSpeed);
-                await Task.Delay(increment, cancellationToken);
-            }
+            await writer.SendPanTilt(panSpeed, tiltSpeed);
+            await Task.Delay(increment, cancellationToken);
         }
-        finally
-        {
-            await writer.SendPanTilt(0, 0);
-        }
+        await writer.SendPanTilt(0, 0);
     }
 }

@@ -71,37 +71,34 @@ public class PanOperation : IOperation
 
     public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
-        try
+        await writer.SendStop();
+        await Task.Delay(135, cancellationToken);
+
+        var max = maxSpeed * scale; // change how fast the camera can move.
+        var panSpd = Convert.ToInt16((absSlope > 1 ? max / absSlope : max) * panDir);
+        var tiltSpd = Convert.ToInt16((absSlope > 1 ? max : max * absSlope) * tiltDir);
+
+        if (!cancellationToken.IsCancellationRequested)
         {
-            var max = maxSpeed * scale; // change how fast the camera can move.
-            var panSpd = Convert.ToInt16((absSlope > 1 ? max / absSlope : max) * panDir);
-            var tiltSpd = Convert.ToInt16((absSlope > 1 ? max : max * absSlope) * tiltDir);
-
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                // move camera to first position
-                await writer.SendPositionAbsolute(this.start);
-                await Task.Delay(1000, cancellationToken);
-            }
-
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                await writer.SendPanTiltZoom(panSpd, tiltSpd, this.zoom);
-            }
-
-            // wait for the allotted time.
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                await Task.Delay(Convert.ToInt32(this.timeSpan.TotalMilliseconds), cancellationToken);
-            }
+            // move camera to first position
+            await writer.SendPositionAbsolute(this.start);
+            await Task.Delay(1000, cancellationToken);
         }
-        finally
+
+        if (!cancellationToken.IsCancellationRequested)
         {
-            // always send the stop moving
-            // stop moving.  send twice just to make sure you get it
-            await writer.SendPanTiltZoom(0, 0, 0);
-            Thread.Sleep(135);
-            await writer.SendPanTiltZoom(0, 0, 0);
+            await writer.SendPanTiltZoom(panSpd, tiltSpd, this.zoom);
         }
+
+        // wait for the allotted time.
+        if (!cancellationToken.IsCancellationRequested)
+        {
+            await Task.Delay(Convert.ToInt32(this.timeSpan.TotalMilliseconds), cancellationToken);
+        }
+        // always send the stop moving
+        // stop moving.  send twice just to make sure you get it
+        await writer.SendPanTiltZoom(0, 0, 0);
+        Thread.Sleep(135);
+        await writer.SendPanTiltZoom(0, 0, 0);
     }
 }

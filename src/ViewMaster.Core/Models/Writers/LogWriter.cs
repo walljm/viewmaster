@@ -46,4 +46,10 @@ public class LogWriter : IWriter
         Debug.WriteLine($"Speed: {speed}");
         return Task.CompletedTask;
     }
+
+    public Task SendStop()
+    {
+        Debug.WriteLine($"Stop");
+        return Task.CompletedTask;
+    }
 }
