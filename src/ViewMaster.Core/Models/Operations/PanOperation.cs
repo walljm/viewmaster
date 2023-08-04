@@ -69,24 +69,39 @@ public class PanOperation : IOperation
         this.tiltDir = angle < 90 || angle > 270 ? 1 : -1;
     }
 
-    public async Task Execute(IWriter writer)
+    public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
-        var max = maxSpeed * scale; // change how fast the camera can move.
-        var panSpd = Convert.ToInt16((absSlope > 1 ? max / absSlope : max) * panDir);
-        var tiltSpd = Convert.ToInt16((absSlope > 1 ? max : max * absSlope) * tiltDir);
+        try
+        {
+            var max = maxSpeed * scale; // change how fast the camera can move.
+            var panSpd = Convert.ToInt16((absSlope > 1 ? max / absSlope : max) * panDir);
+            var tiltSpd = Convert.ToInt16((absSlope > 1 ? max : max * absSlope) * tiltDir);
 
-        // move camera to first position
-        await writer.SendPositionAbsolute(this.start);
-        Thread.Sleep(1000);
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                // move camera to first position
+                await writer.SendPositionAbsolute(this.start);
+                await Task.Delay(1000, cancellationToken);
+            }
 
-        await writer.SendPanTiltZoom(panSpd, tiltSpd, this.zoom);
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                await writer.SendPanTiltZoom(panSpd, tiltSpd, this.zoom);
+            }
 
-        // wait for the allotted time.
-        Thread.Sleep(Convert.ToInt32(this.timeSpan.TotalMilliseconds));
-
-        // stop moving.  send twice just to make sure you get it
-        await writer.SendPanTiltZoom(0, 0, 0);
-        Thread.Sleep(135);
-        await writer.SendPanTiltZoom(0, 0, 0);
+            // wait for the allotted time.
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                await Task.Delay(Convert.ToInt32(this.timeSpan.TotalMilliseconds), cancellationToken);
+            }
+        }
+        finally
+        {
+            // always send the stop moving
+            // stop moving.  send twice just to make sure you get it
+            await writer.SendPanTiltZoom(0, 0, 0);
+            Thread.Sleep(135);
+            await writer.SendPanTiltZoom(0, 0, 0);
+        }
     }
 }

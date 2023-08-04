@@ -52,9 +52,9 @@ namespace ViewMaster.CommandLine
                 //new Cue(1, "Cue1", writers, new CircleOperation(TimeSpan.FromSeconds(30), 0.25)),
 
                 // set zoom to a specific level
-                new Cue(1, "Zoom", writers, new ZoomOperation(1000)),
-                new Cue(2, "Pan Left", writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10)),
-                new Cue(3, "Move", writers, new MoveOperation(new Degrees(180, 90))),
+                new Cue(1, "Zoom", new List<CueTarget>{new CueTarget(writers, new ZoomOperation(1000)) }),
+                new Cue(2, "Pan Left", new List<CueTarget>{new CueTarget(writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10))}),
+                new Cue(3, "Move",new List<CueTarget>{new CueTarget( writers, new MoveOperation(new Degrees(180, 90)))}),
             });
 
             var session = new Session(sequence);

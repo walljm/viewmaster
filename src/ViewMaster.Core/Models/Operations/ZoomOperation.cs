@@ -15,8 +15,14 @@ public class ZoomOperation : IOperation
         this.speed = speed;
     }
 
-    public async Task Execute(IWriter writer)
+    public ZoomOperation(ZoomOperationData data)
     {
+        this.speed = data.Speed;
+    }
+
+    public async Task Execute(IWriter writer, CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested) { return; }
         await writer.SendZoomAbsolute(this.speed);
     }
 }

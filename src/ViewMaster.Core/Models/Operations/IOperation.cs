@@ -4,5 +4,5 @@ namespace ViewMaster.Core.Models.Operations;
 
 public interface IOperation
 {
-    Task Execute(IWriter writer);
+    Task Execute(IWriter writer, CancellationToken cancellationToken);
 }

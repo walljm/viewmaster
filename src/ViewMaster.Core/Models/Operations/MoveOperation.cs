@@ -10,14 +10,20 @@ public class MoveOperation : IOperation
     /// <summary>
     ///  Moves the camera to a specific position
     /// </summary>
-    /// <param name="coordinate">A coordinates using 1 - 65535 scale.</param>
-    public MoveOperation(Coordinate coordinate)
+    /// <param name="location">A set of coordinates using degrees, where 0 points down or behind.</param>
+    public MoveOperation(Degrees location)
     {
-        this.coordinate = coordinate;
+        this.coordinate = location;
     }
 
-    public async Task Execute(IWriter writer)
+    public MoveOperation(MoveOperationData data)
     {
+        this.coordinate = data.Location ?? throw new ArgumentNullException(nameof(data.Location));
+    }
+
+    public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
+    {
+        if (cancellationToken.IsCancellationRequested) { return; }
         await writer.SendPositionAbsolute(coordinate);
     }
 }

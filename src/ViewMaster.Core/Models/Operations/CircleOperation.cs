@@ -32,30 +32,36 @@ public class CircleOperation : IOperation
         this.scale = scale;
     }
 
-    public async Task Execute(IWriter writer)
+    public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
-        var iterations = Math.Round(this.timeSpan.TotalMilliseconds / increment, 0);
-        var time = iterations * increment; // 10 seconds
-
-        for (var i = 0; i < time; i += increment)
+        try
         {
-            // step size of the angle
-            var dtheta = 2 * Math.PI / iterations;
+            var iterations = Math.Round(this.timeSpan.TotalMilliseconds / increment, 0);
+            var time = iterations * increment; // 10 seconds
 
-            // angle
-            var theta = dtheta * (i / increment);
+            for (var i = 0; i < time; i += increment)
+            {
+                if (cancellationToken.IsCancellationRequested) { break; }
 
-            var xspeed = Math.Sin(theta) * maxSpeed * this.scale * -1;
-            var yspeed = Math.Cos(theta) * maxSpeed * this.scale;
+                // step size of the angle
+                var dtheta = 2 * Math.PI / iterations;
 
-            var panSpeed = Convert.ToInt16(Math.Round(xspeed));
-            var tiltSpeed = Convert.ToInt16(Math.Round(yspeed));
+                // angle
+                var theta = dtheta * (i / increment);
 
-            await writer.SendPanTilt(panSpeed, tiltSpeed);
+                var xspeed = Math.Sin(theta) * maxSpeed * this.scale * -1;
+                var yspeed = Math.Cos(theta) * maxSpeed * this.scale;
 
-            Thread.Sleep(increment);
+                var panSpeed = Convert.ToInt16(Math.Round(xspeed));
+                var tiltSpeed = Convert.ToInt16(Math.Round(yspeed));
+
+                await writer.SendPanTilt(panSpeed, tiltSpeed);
+                await Task.Delay(increment, cancellationToken);
+            }
         }
-
-        await writer.SendPanTilt(0, 0);
+        finally
+        {
+            await writer.SendPanTilt(0, 0);
+        }
     }
 }
