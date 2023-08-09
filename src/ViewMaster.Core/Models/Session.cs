@@ -8,11 +8,11 @@ namespace ViewMaster.Core.Models.Sequences;
 public record Cue
 {
     public Cue() { }
-    public Cue(int ordinal, string label, IEnumerable<CueTarget> targets)
+    public Cue(int ordinal, string label, IEnumerable<CueAction> actions)
     {
         this.Ordinal = ordinal;
         this.Label = label;
-        this.Targets = targets;
+        this.Actions = actions;
     }
 
     [DisplayName("Order")]
@@ -20,30 +20,34 @@ public record Cue
 
     public string Label { get; init; } = string.Empty;
 
-    public IEnumerable<CueTarget> Targets { get; init; } = Array.Empty<CueTarget>();
+    public string Status { get; set; } = string.Empty;
+
+    public IEnumerable<CueAction> Actions { get; init; } = Array.Empty<CueAction>();
 
     public async Task Execute(CancellationToken cancellationToken = default)
     {
         try
         {
-            Debug.WriteLine($"Cue: ({Ordinal}) {Label} is executing");
+            Debug.WriteLine($"Cue ({Ordinal})> {Label} is executing");
+            this.Status = "Executing";
             var psTasks = new List<Task>();
-            foreach (var target in Targets)
+            foreach (var target in Actions)
             {
                 psTasks.Add(target.Execute(cancellationToken));
             }
             await Task.WhenAll(psTasks);
+            this.Status = "Complete";
         }
         catch (TaskCanceledException)
         {
-            // NOP
-            // we don't want these to stop program execution.
-            Debug.WriteLine($"Cue: {Ordinal}:{Label} was cancelled.");
+            this.Status = "Cancelled";
+            // NOP: we don't want these to stop program execution.
+            Debug.WriteLine($"Cue ({Ordinal})> {Label} was cancelled.");
         }
     }
 };
 
-public record CueTarget(IEnumerable<IWriter> Writers, IOperation Operation)
+public record CueAction(IEnumerable<IWriter> Writers, IOperation Operation)
 {
     public async Task Execute(CancellationToken cancellationToken = default)
     {

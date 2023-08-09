@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Hosting;
 using ViewMaster.Core.Models;
 using ViewMaster.Core.Models.Common;
 using ViewMaster.Core.Models.Operations;
@@ -10,10 +11,14 @@ namespace ViewMaster.DesktopController
     {
         private Session currentSession = new(new Sequence("New Session", new List<Cue>()));
         private CancellationTokenSource cancellationTokenSource = new();
+        private readonly ICueDispatcher cueDispatcher;
+        private readonly IHostApplicationLifetime hostApplication;
 
-        public MainWindow()
+        public MainWindow(ICueDispatcher cueDispatcher, IHostApplicationLifetime hostApplication)
         {
             InitializeComponent();
+            this.cueDispatcher = cueDispatcher;
+            this.hostApplication = hostApplication;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -21,19 +26,19 @@ namespace ViewMaster.DesktopController
             var writers = new List<IWriter>() { new LogWriter() };
             this.currentSession = new(new Sequence("Run in a circle", new List<Cue> {
                 // set zoom to a specific level
-                new Cue(1, "Zoom", new List<CueTarget>{new CueTarget(writers, new ZoomOperation(1000)) }),
-                new Cue(2, "Pan Left", new List<CueTarget>{new CueTarget(writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10))}),
-                new Cue(3, "Move",new List<CueTarget>{new CueTarget( writers, new MoveOperation(new Degrees(180, 90)))}),
+                new Cue(1, "Zoom", new List<CueAction>{new CueAction(writers, new ZoomOperation(1000)) }),
+                new Cue(2, "Pan Left", new List<CueAction>{new CueAction(writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10))}),
+                new Cue(3, "Move",new List<CueAction>{new CueAction( writers, new MoveOperation(new Degrees(180, 90)))}),
             }));
-            initGrid();
+            InitGrid();
         }
 
-        private void initGrid()
+        private void InitGrid()
         {
             this.sequenceGrid.DataSource = this.currentSession.Sequence.Cues;
             foreach (DataGridViewColumn c in this.sequenceGrid.Columns)
             {
-                if (c.Name == nameof(Cue.Targets))
+                if (c.Name == nameof(Cue.Actions))
                 {
                     c.Visible = false;
                 }
@@ -48,9 +53,16 @@ namespace ViewMaster.DesktopController
                     c.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
             }
+
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            // set event after grid has initialized to avoid triggering unecessary executions of the same cue.
+            this.sequenceGrid.SelectionChanged += this.SequenceGrid_SelectionChanged;
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+
+            this.TriggerCue(this.currentSession?.Sequence?.Cues?.FirstOrDefault()).Wait();
         }
 
-        private void loadSequenceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoadSequenceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = "c:\\";
@@ -73,7 +85,7 @@ namespace ViewMaster.DesktopController
             }
         }
 
-        private void saveSequenceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveSequenceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var fileDialog = new SaveFileDialog();
             fileDialog.InitialDirectory = "c:\\";
@@ -96,15 +108,33 @@ namespace ViewMaster.DesktopController
             }
         }
 
-        private async void sequenceGrid_SelectionChanged(object sender, EventArgs e)
+        private async void SequenceGrid_SelectionChanged(object sender, EventArgs e)
         {
             if (this.sequenceGrid?.CurrentRow?.DataBoundItem is not Cue cue)
             {
                 return;
             }
+            await TriggerCue(cue);
+        }
+
+        private async Task TriggerCue(Cue? cue)
+        {
+            if (cue is null)
+            {
+                return;
+            }
+
             this.cancellationTokenSource.Cancel();
             this.cancellationTokenSource = new CancellationTokenSource();
-            await cue.Execute(this.cancellationTokenSource.Token).ConfigureAwait(false);
+            await this.cueDispatcher.DispatchAsync(new CueArguments(cue, this.cancellationTokenSource.Token));
+        }
+
+        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // this shouldn't happen.  but if it does, it will happen very loudly, forcing it to be addresses quickly. - walljm
+            Environment.ExitCode = -1;
+            this.hostApplication.StopApplication();
+            return;
         }
     }
 }

@@ -1,17 +1,27 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+
 namespace ViewMaster.DesktopController
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
-        static void Main()
+        private static async Task Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new MainWindow());
+            await CreateHostBuilder().Build().RunAsync();
+        }
+
+        private static IHostBuilder CreateHostBuilder()
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureServices(services =>
+                {
+                    services.TryAddSingleton<ICueDispatcher, SessionHostedService>();
+                    services.AddHostedService(provider => (SessionHostedService)provider.GetRequiredService<ICueDispatcher>());
+
+                    services.AddHostedService<ApplicationLaunch>();
+                });
         }
     }
 }

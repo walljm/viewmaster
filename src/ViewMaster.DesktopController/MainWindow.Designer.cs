@@ -48,9 +48,8 @@
             sequenceGrid.RowHeadersWidth = 62;
             sequenceGrid.RowTemplate.Height = 33;
             sequenceGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            sequenceGrid.Size = new Size(624, 948);
+            sequenceGrid.Size = new Size(716, 948);
             sequenceGrid.TabIndex = 0;
-            sequenceGrid.SelectionChanged += this.sequenceGrid_SelectionChanged;
             // 
             // menuStrip1
             // 
@@ -74,14 +73,14 @@
             loadSequenceToolStripMenuItem.Name = "loadSequenceToolStripMenuItem";
             loadSequenceToolStripMenuItem.Size = new Size(234, 34);
             loadSequenceToolStripMenuItem.Text = "Load Sequence";
-            loadSequenceToolStripMenuItem.Click += this.loadSequenceToolStripMenuItem_Click;
+            loadSequenceToolStripMenuItem.Click += this.LoadSequenceToolStripMenuItem_Click;
             // 
             // saveSequenceToolStripMenuItem
             // 
             saveSequenceToolStripMenuItem.Name = "saveSequenceToolStripMenuItem";
             saveSequenceToolStripMenuItem.Size = new Size(234, 34);
             saveSequenceToolStripMenuItem.Text = "Save Sequence";
-            saveSequenceToolStripMenuItem.Click += this.saveSequenceToolStripMenuItem_Click;
+            saveSequenceToolStripMenuItem.Click += this.SaveSequenceToolStripMenuItem_Click;
             // 
             // MainWindow
             // 
@@ -93,6 +92,7 @@
             this.MainMenuStrip = menuStrip1;
             this.Name = "MainWindow";
             this.Text = "View Master";
+            this.FormClosed += this.MainWindow_FormClosed;
             this.Load += this.MainWindow_Load;
             ((System.ComponentModel.ISupportInitialize)sequenceGrid).EndInit();
             menuStrip1.ResumeLayout(false);

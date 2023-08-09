@@ -24,7 +24,7 @@ public class MoveOperation : IOperation
     public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
         await writer.SendStop();
-        await Task.Delay(135, cancellationToken);
+        await Task.Delay(writer.SendDelay, cancellationToken);
 
         if (cancellationToken.IsCancellationRequested) { return; }
         await writer.SendPositionAbsolute(coordinate);

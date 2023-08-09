@@ -72,7 +72,7 @@ public class PanOperation : IOperation
     public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
         await writer.SendStop();
-        await Task.Delay(135, cancellationToken);
+        await Task.Delay(writer.SendDelay, cancellationToken);
 
         var max = maxSpeed * scale; // change how fast the camera can move.
         var panSpd = Convert.ToInt16((absSlope > 1 ? max / absSlope : max) * panDir);
@@ -82,6 +82,8 @@ public class PanOperation : IOperation
         {
             // move camera to first position
             await writer.SendPositionAbsolute(this.start);
+            // TODO you should query for position from camera until its there
+            //  instead of waiting for an arbitray period of time.
             await Task.Delay(1000, cancellationToken);
         }
 
@@ -95,10 +97,10 @@ public class PanOperation : IOperation
         {
             await Task.Delay(Convert.ToInt32(this.timeSpan.TotalMilliseconds), cancellationToken);
         }
-        // always send the stop moving
-        // stop moving.  send twice just to make sure you get it
-        await writer.SendPanTiltZoom(0, 0, 0);
-        Thread.Sleep(135);
-        await writer.SendPanTiltZoom(0, 0, 0);
+
+        // always send the stop moving. send twice just to make sure you get it
+        await writer.SendStop();
+        await Task.Delay(writer.SendDelay, cancellationToken);
+        await writer.SendStop();
     }
 }

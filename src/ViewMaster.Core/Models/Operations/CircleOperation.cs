@@ -7,7 +7,6 @@ public class CircleOperation : IOperation
     /// <summary>
     /// This is as fast as the panasonic cameras can recieve requests.
     /// </summary>
-    private const ushort increment = 130; // in milliseconds.
 
     private const ushort maxSpeed = 49;
 
@@ -35,12 +34,12 @@ public class CircleOperation : IOperation
     public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
         await writer.SendStop();
-        await Task.Delay(135, cancellationToken);
+        await Task.Delay(writer.SendDelay, cancellationToken);
 
-        var iterations = Math.Round(this.timeSpan.TotalMilliseconds / increment, 0);
-        var time = iterations * increment; // 10 seconds
+        var iterations = Math.Round(this.timeSpan.TotalMilliseconds / writer.SendDelay, 0);
+        var time = iterations * writer.SendDelay; // 10 seconds
 
-        for (var i = 0; i < time; i += increment)
+        for (var i = 0; i < time; i += writer.SendDelay)
         {
             if (cancellationToken.IsCancellationRequested) { break; }
 
@@ -48,7 +47,7 @@ public class CircleOperation : IOperation
             var dtheta = 2 * Math.PI / iterations;
 
             // angle
-            var theta = dtheta * (i / increment);
+            var theta = dtheta * (i / writer.SendDelay);
 
             var xspeed = Math.Sin(theta) * maxSpeed * this.scale * -1;
             var yspeed = Math.Cos(theta) * maxSpeed * this.scale;
@@ -57,8 +56,11 @@ public class CircleOperation : IOperation
             var tiltSpeed = Convert.ToInt16(Math.Round(yspeed));
 
             await writer.SendPanTilt(panSpeed, tiltSpeed);
-            await Task.Delay(increment, cancellationToken);
+            await Task.Delay(writer.SendDelay, cancellationToken);
         }
-        await writer.SendPanTilt(0, 0);
+
+        await writer.SendStop();
+        await Task.Delay(writer.SendDelay, cancellationToken);
+        await writer.SendStop();
     }
 }

@@ -14,8 +14,6 @@ public enum WriterType
     LogWriter,
 }
 
-public record WriterData(IPAddress Address, WriterType Kind);
-
 public enum OperationType
 {
     Move,
@@ -23,6 +21,8 @@ public enum OperationType
     PanType1,
     PanType2,
 }
+
+public record WriterData(IPAddress Address, WriterType Kind);
 
 public record DegreeData(
     [Range(0.0, 360.0)] double Pan,
@@ -87,12 +87,12 @@ public class PanOperationDataType2 : OperationData
 
 public record TargetData(IEnumerable<WriterData> Writers, OperationData Operation)
 {
-    public CueTarget ToCueTarget()
+    public CueAction ToCueTarget()
     {
-        return new CueTarget(
+        return new CueAction(
             Writers.Select(o => o.Kind switch
             {
-                WriterType.PtzWriter => (IWriter)new PtzWriter(o.Address),
+                WriterType.PtzWriter => (IWriter)new PanasonicPtzWriter(o.Address),
                 WriterType.LogWriter => (IWriter)new LogWriter(),
                 _ => throw new InvalidOperationException($"Unsupported Writer Type: {o.Kind}"),
             }),

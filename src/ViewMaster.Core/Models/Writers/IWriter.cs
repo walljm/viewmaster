@@ -4,6 +4,8 @@ namespace ViewMaster.Core.Models.Writers;
 
 public interface IWriter
 {
+    ushort SendDelay { get; }
+
     Task SendAction(Action action, short speed);
 
     Task SendPanTilt(short panSpeed, short tiltSpeed);

@@ -17,23 +17,29 @@ namespace ViewMaster.Core.Models.Writers;
 /// AW-UB300
 /// AW-SFU01
 /// </summary>
-public class PtzWriter : IDisposable, IWriter
+public class PanasonicPtzWriter : IDisposable, IWriter
 {
     private readonly IPAddress DestinationIp;
     private readonly HttpClient Client = new();
     private bool disposedValue;
 
-    public PtzWriter(IPAddress ip)
+    public ushort SendDelay => 135;
+
+    public PanasonicPtzWriter(IPAddress ip)
     {
         this.DestinationIp = ip;
     }
 
     public async Task SendPanTilt(short panSpeed, short tiltSpeed)
     {
-        // we expect a number 0 - 49. 0 being stop, 1 being slow progressing faster to up to the max sdpeed of 49.
-        if (panSpeed < -49 || panSpeed > 49 || tiltSpeed < -49 || tiltSpeed > 49)
+        if (panSpeed < -49 || panSpeed > 49)
         {
-            throw new ArgumentOutOfRangeException("Speed must be between -49 and 49");
+            throw new ArgumentOutOfRangeException("Pan Speed must be between -49 and 49");
+        }
+
+        if (tiltSpeed < -49 || tiltSpeed > 49)
+        {
+            throw new ArgumentOutOfRangeException("Tilt Speed must be between -49 and 49");
         }
 
         // Panasonic uses 50 as 0.  Why?  who knows...
@@ -59,7 +65,7 @@ public class PtzWriter : IDisposable, IWriter
 
         // send the api call
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23PTS{psp}{tsp}&res=1");
-        Thread.Sleep(135); // don't send operations too fast.
+        Thread.Sleep(SendDelay); // don't send operations too fast.
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23Z{zsp}&res=1");
     }
 
@@ -142,7 +148,7 @@ public class PtzWriter : IDisposable, IWriter
     public async Task SendStop()
     {
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23PTS5050&res=1");
-        Thread.Sleep(135); // don't send operations too fast.
+        Thread.Sleep(SendDelay); // don't send operations too fast.
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23Z50&res=1");
     }
 
@@ -165,5 +171,4 @@ public class PtzWriter : IDisposable, IWriter
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
-
 }
