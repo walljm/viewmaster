@@ -28,27 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             sequenceGrid = new DataGridView();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             loadSequenceToolStripMenuItem = new ToolStripMenuItem();
             saveSequenceToolStripMenuItem = new ToolStripMenuItem();
+            splitContainer1 = new SplitContainer();
             ((System.ComponentModel.ISupportInitialize)sequenceGrid).BeginInit();
             menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // sequenceGrid
             // 
             sequenceGrid.AllowUserToOrderColumns = true;
-            sequenceGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             sequenceGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            sequenceGrid.Location = new Point(0, 40);
+            sequenceGrid.Dock = DockStyle.Fill;
+            sequenceGrid.Location = new Point(0, 0);
             sequenceGrid.Margin = new Padding(0);
             sequenceGrid.Name = "sequenceGrid";
             sequenceGrid.RowHeadersWidth = 62;
             sequenceGrid.RowTemplate.Height = 33;
             sequenceGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            sequenceGrid.Size = new Size(716, 948);
+            sequenceGrid.Size = new Size(750, 955);
             sequenceGrid.TabIndex = 0;
             // 
             // menuStrip1
@@ -82,13 +87,28 @@
             saveSequenceToolStripMenuItem.Text = "Save Sequence";
             saveSequenceToolStripMenuItem.Click += this.SaveSequenceToolStripMenuItem_Click;
             // 
+            // splitContainer1
+            // 
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 33);
+            splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(sequenceGrid);
+            splitContainer1.Size = new Size(1430, 955);
+            splitContainer1.SplitterDistance = 750;
+            splitContainer1.SplitterWidth = 10;
+            splitContainer1.TabIndex = 2;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new SizeF(10F, 25F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(1430, 988);
-            this.Controls.Add(sequenceGrid);
+            this.Controls.Add(splitContainer1);
             this.Controls.Add(menuStrip1);
+            this.Icon = (Icon)resources.GetObject("$this.Icon");
             this.MainMenuStrip = menuStrip1;
             this.Name = "MainWindow";
             this.Text = "View Master";
@@ -97,6 +117,9 @@
             ((System.ComponentModel.ISupportInitialize)sequenceGrid).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            splitContainer1.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -108,5 +131,6 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem loadSequenceToolStripMenuItem;
         private ToolStripMenuItem saveSequenceToolStripMenuItem;
+        private SplitContainer splitContainer1;
     }
 }

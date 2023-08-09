@@ -120,4 +120,74 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAIB0AAAEAIAAcDwAAFgAAACgAAAAgAAAAOgAAAAEAIAAAAAAAgA4AACUWAAAlFgAAAAAAAAAA
+        AACkcBX/pXEW/6VxFv+lcBX/pHAV/6RwFf+kcBb/pHAW/6RwFv+kcRf/pHEX/6VxF/+lchj/pXIY/6Vy
+        GP+lchf/pXIY/6VyGP+lchj/pnMZ/6ZzGf+mcxn/pnMZ/6ZzGv+mcxr/pnMa/6Z0G/+mdBv/p3Uc/6h2
+        Hf+odh3/qHYd/6RwFf+lcRb/pXEV/6p4IP+wfyr/sH8r/7B/K/+wfyv/sIAs/7CALP+wgCz/sYEs/7GB
+        Lf+xgS3/sYEt/7GBLf+xgS3/sYEt/7GCLf+ygi7/soIu/7KCLv+ygi7/soIu/7KCLv+xgi//soMv/7GC
+        Lv+reSL/p3Uc/6h2Hf+odh3/pHAV/6RwFf+5ijn/4b+D/+rLlP/ry5X/68uV/+vLlf/ry5X/68uV/+vL
+        lf/ry5X/68yV/+vMlf/rzJX/68yV/+vMlf/rzJX/68yV/+vMlf/rzJX/68yV/+vMlf/rzJX/68yV/+vM
+        lf/rzJX/6suU/9u3eP+ygy//qHUc/6h2Hf+kcRX/p3Qa/9u3ef/016X/8taj//LWo//y1qP/8taj//LW
+        o//y1qP/8taj//LWo//y1qP/8taj//LWo//y1qP/8taj//LWo//y1qP/8taj//LWo//y1qP/8taj//LW
+        o//y1qP/8taj//LWo//z1qP/89ek/82mYP+ndRz/qHYe/6VxFf+pdx7/4sGG//PWpP/y1aL/8tWi//LV
+        ov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/89aj//PWpP/z1qT/8taj//LVov/y1aL/8tWi//LV
+        ov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/z16T/1bBu/6h2Hf+odh7/pXEV/6l3Hv/iwYb/89ak//LV
+        ov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1qP/89ek//DTn//qypP/5MOI/+XEiv/szZb/8tSh//PW
+        pP/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8tWi//PXpP/VsG7/qHYe/6h2Hv+lcRX/qXce/+LB
+        hv/z1qT/8tWi//LVov/y1aL/8tWi//LVov/y1aL/89ak/+zMlv/TrGj/uYs4/6p3HP+lcBL/pnAT/617
+        Iv+/kkL/2bV0/+/RnP/z1qP/8tWi//LVov/y1aL/8tWi//LVov/y1aL/89ek/9Wwbv+odh7/qHYe/6Vx
+        Ff+pdh7/4sGG//PWpP/y1aL/8tWi//LVov/y1aL/8tWi//LWo//eu33/s4Is/6BpCP+mchX/tYUw/7+S
+        Qv+9kD//soAq/6NuD/+hawv/u408/+fGjf/z1qT/8tWi//LVov/y1aL/8tWi//LVov/z16T/1bBu/6h2
+        Hv+odh7/pXEV/6l3H//iwYb/89ak//LVov/y1aL/8tWi//LVov/z1qT/2rV1/6h0F/+kbxH/yJ1T/+XE
+        iv/v0p3/8tWi//LVov/u0Jv/4L2A/76QQP+gagn/sYAp/+bFi//z1qT/8tWi//LVov/y1aL/8tWi//PX
+        pP/VsG7/qHYe/6h2Hv+kcBb/qXcf/+LBhv/z1qT/8tWi//LVov/y1aL/89aj/+XEiv+seR7/pnIV/9i0
+        cv/y1aP/89ak//PWpP/y1aL/8tWi//LVov/z16T/8NKe/8ujWv+hagv/uYo3/+3Pmv/y1qP/8tWi//LV
+        ov/y1aL/89ek/9Wwbv+odh7/qHcf/6RwFv+pdx//4sGG//PWpP/y1aL/8tWi//LVov/x1KH/wZVH/6Bq
+        Cf/Sq2b/89ak//PWo//tz5n/48KG//LVof/z1qP/8tWi//LVov/y1qP/8dOg/8KWSf+gaQj/0qtm//PW
+        pP/y1aL/8tWi//LVov/z16T/1bBu/6h2Hv+odx//pHAW/6l3H//iwYb/89ak//LVov/y1aL/89ak/+XD
+        if+nchX/tYUx/+7Qm//y1aP/89aj/+fGjf+wfib/yJ5T/+vMlP/z1qT/8tWi//LVov/z1qT/5cSK/6h0
+        GP+zgiz/7tCa//LVov/y1aL/8tWi//PXpP/VsG7/qHcf/6h3H/+lcRb/qXcf/+LBhv/z1qT/8tWi//LV
+        ov/z16X/1K5q/6BpCP/Pp2H/89el//LVov/z1qP/58aN/6hzF/+eZwb/soIr/9q2dv/x1KD/89aj//LV
+        ov/x1KH/vY8//6RvEf/jwYb/89ak//LVov/y1aL/89ek/9Wwbv+odx//qHcf/6VxFv+pdx//4sGG//PW
+        pP/y1aL/8tWi//PWpP/Jn1b/oWoK/9y4ev/z16T/8tWi//PWo//nxo3/qHQY/55nBv+eZwX/pG4Q/8OX
+        Sv/nx47/8tWi//PXpP/Loln/oGoK/9u2d//z16X/8tWi//LVov/z16T/1bBu/6h3H/+odx//pXEW/6l3
+        H//iwYb/89ak//LVov/y1aL/89ak/8edUv+hawv/37x+//PXpP/y1aL/89aj/+fGjf+odBj/nmcG/59o
+        B/+eZgT/pnET/9Suav/y1aL/89ek/86mX/+gaQn/2bRz//PXpf/y1aL/8tWi//PXpP/VsG7/qHcf/6h3
+        H/+lcRb/qXcf/+LBhv/z1qT/8tWi//LVov/z16X/zaVe/6BpCP/YsnH/89el//LVov/z1qP/58aN/6h0
+        GP+dZgX/oGkI/7aGMv/eunz/8dSg//LVov/z1qP/xptP/6JrDP/eu33/89ek//LVov/y1aL/89ek/9Ww
+        bv+odx//qHYf/6VxF/+pdyD/4sGG//PWpP/y1aL/8tWi//PXpP/cuHn/oWsL/8OYS//y1aP/8tWi//PW
+        o//nxo3/p3MW/6h0F//NpFz/7c6Y//PWpP/y1aL/8tWi/+7Pmv+zgiv/qnYb/+nJkP/z1qP/8tWi//LV
+        ov/z16T/1bBu/6h3H/+pdyD/pHEX/6l4IP/iwYb/89ak//LVov/y1aL/8tWj/+zNl/+xgCj/qHUZ/+XD
+        if/z1qT/89aj/+jIj//Dl0r/4b+D//LWo//y1qP/8tWi//LVov/z16X/17Jw/6FqCv/BlEb/8dSh//LV
+        ov/y1aL/8tWi//PXpP/VsG7/qXcf/6l3IP+lcRf/qXgg/+LBhv/z1qT/8tWi//LVov/y1aL/89ak/9Su
+        av+hagr/uow7/+zOmP/z1qT/8dOg//DSnv/z1qT/8tWi//LVov/y1aL/89ek/+XEiv+ufCT/p3MW/+LA
+        hP/z1qT/8tWi//LVov/y1aL/89ek/9Wwb/+pdyD/qXcg/6RyF/+peCD/4sGG//PWpP/y1aL/8tWi//LV
+        ov/y1aL/79Gd/8CURf+faAf/vI49/+bFjP/z1qP/89el//PWpP/z1qT/89el//HUof/eu33/sH8n/6Fr
+        C//QqWP/8tWj//LVov/y1aL/8tWi//LVov/z16T/1bBv/6l3IP+pdyD/pXIX/6l4IP/iwYb/89ak//LV
+        ov/y1aL/8tWi//LVov/y1qP/7M2W/8CURf+gagn/qncb/8abT//ZtXT/4sCE/+G+gv/WsG3/v5JD/6Vv
+        Ef+jbg//zaRc//DTn//y1aL/8tWi//LVov/y1aL/8tWi//PXpP/VsG//qXcg/6l3IP+lchf/qXgg/+LB
+        hv/z1qT/8tWi//LVov/y1aL/8tWi//LVov/z1qP/79Gc/9KrZv+wfyf/oWsL/6BqCf+jbg//o20O/6Bp
+        CP+jbg//t4c0/9q2dv/x1KH/8tWj//LVov/y1aL/8tWi//LVov/y1aL/89ek/9Wwb/+pdyD/qXcg/6Vy
+        F/+peCD/4sGG//PWpP/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/89ak/+zNl//cuHj/y6Ja/8KW
+        SP/DmEv/z6dh/+C+gf/v0Zz/89ak//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/z16T/1bBv/6l3
+        IP+peCD/pXIX/6p4IP/jwYb/89ak//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8taj//PX
+        pP/z16T/8taj//PWo//z16T/89ak//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8tWi//PX
+        pP/VsG//qXcg/6l4If+lchf/qXcf/+HAhP/z1qT/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LV
+        ov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LVov/y1aL/8tWi//LV
+        ov/y1aL/89ek/9Svbf+pdyD/qXgh/6VyGP+mcxn/zaZg//LVof/z16T/89ek//PXpP/z16T/89ek//PX
+        pP/z16T/89ek//PXpP/z16T/89ek//PXpP/z16T/89ek//PXpP/z16T/89ek//PXpP/z16T/89ek//PX
+        pP/z16T/89ek//PXpP/u0Jv/wZZM/6h3H/+peCH/pXIY/6ZyGP+reSH/xJlP/9CoZP/QqWT/0Klk/9Cp
+        Zf/QqWX/0Kll/9CpZf/QqWX/0Kll/9CqZf/Qqmb/0Kpm/9CqZv/Rqmb/0apm/9GqZv/Rqmf/0apn/9Gq
+        Z//Rqmf/0atn/9GrZ//Rq2f/0Kll/8CUSP+qeSP/qXgh/6l4If+mcxn/pnMZ/6ZzGP+lchf/pXIX/6Vy
+        GP+lchj/pnMY/6ZzGf+mcxn/pnMZ/6ZzGv+mcxr/pnMa/6Z0G/+mdBv/p3Qb/6d1HP+ndRz/p3Uc/6d1
+        Hf+ndR3/p3Ud/6d2Hf+ndh7/p3Ye/6h2Hv+odh7/qHYe/6h3IP+peCH/qXgh/6ZzGf+mcxn/pnMZ/6Zz
+        Gf+mcxn/pnMZ/6ZzGf+ndBr/p3Qa/6d0Gv+ndBv/p3Qb/6d0G/+ndRz/p3Uc/6d1HP+odh3/qHYd/6h2
+        Hf+odh3/qHYe/6h2Hv+odh7/qHcf/6h3H/+odx//qXcg/6l3IP+pdyD/qXgh/6l4If+peCH/AAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+</value>
+  </data>
 </root>
