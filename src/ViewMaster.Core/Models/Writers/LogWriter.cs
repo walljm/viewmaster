@@ -1,15 +1,18 @@
 ﻿using System.Diagnostics;
 using ViewMaster.Core.Models.Common;
+using ViewMaster.Core.Models.Operations;
 
 namespace ViewMaster.Core.Models.Writers;
 
 public class LogWriter : IWriter
 {
-    private static readonly string prefix = " Operation> ";
+    private string prefix => $"Writer ({Id}) Operation> ";
+
+    public ushort Id { get; init; }
 
     public ushort SendDelay => 0;
 
-    public Task SendAction(Action action, short speed)
+    public Task SendAction(Axis action, short speed)
     {
         Debug.WriteLine($"{prefix}{nameof(SendAction)}({nameof(Action)}: {action}, Speed: {speed})");
         return Task.CompletedTask;

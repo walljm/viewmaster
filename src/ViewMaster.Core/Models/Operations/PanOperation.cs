@@ -1,4 +1,5 @@
 ﻿using ViewMaster.Core.Models.Common;
+using ViewMaster.Core.Models.Export;
 using ViewMaster.Core.Models.Writers;
 
 namespace ViewMaster.Core.Models.Operations;
@@ -34,14 +35,20 @@ public class PanOperation : IOperation
         this.start = start;
         this.timeSpan = timeSpan;
         this.zoom = zoom;
+        this.scale = scale;
+        this.zoom = zoom;
+
         var stopCoord = (Coordinate)stop;
         var panOffset = stopCoord.PanCoordinate - this.start.PanCoordinate;
         var tiltOffset = stopCoord.TiltCoordinate - this.start.TiltCoordinate
                          + 0.00001; // hack to prevent divide by 0
-
         this.absSlope = Math.Abs(tiltOffset / panOffset); // y/x
         this.panDir = panOffset < 0 ? -1 : 1;
         this.tiltDir = tiltOffset < 0 ? -1 : 1;
+    }
+
+    public PanOperation(PanOperationDataType1 o) : this(ThrowIfNull(o.Start), ThrowIfNull(o.Stop), o.TimeSpan, o.Scale, o.Zoom)
+    {
     }
 
     /// <summary>
@@ -68,6 +75,12 @@ public class PanOperation : IOperation
         this.panDir = angle > 180 && angle < 360 ? -1 : 1;
         this.tiltDir = angle < 90 || angle > 270 ? 1 : -1;
     }
+
+    public PanOperation(PanOperationDataType2 o) : this(ThrowIfNull(o.Start), o.Angle, o.TimeSpan, o.Scale, o.Zoom)
+    {
+    }
+
+    private static T ThrowIfNull<T>(T? o) => o ?? throw new ArgumentNullException();
 
     public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {

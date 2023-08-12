@@ -45,7 +45,7 @@ namespace ViewMaster.CommandLine
             var writers = new List<IWriter>();
             foreach (var ip in opts.Cameras)
             {
-                writers.Add(new PanasonicPtzWriter(IPAddress.Parse(ip)));
+                writers.Add(new PanasonicPtzWriter(1, IPAddress.Parse(ip)));
             }
 
             var sequence = new Sequence("Run in a circle", new List<Cue> {

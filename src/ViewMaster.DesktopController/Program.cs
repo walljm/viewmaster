@@ -15,32 +15,23 @@ namespace ViewMaster.DesktopController
             ApplicationConfiguration.Initialize();
 
             await Host.CreateDefaultBuilder(args)
-                .ConfigureConfiguration(args)
+                .ConfigureHostConfiguration(configHost =>
+                {
+                    configHost
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddCommandLine(args);
+                })
                 .ConfigureServices(services =>
                 {
                     services.TryAddSingleton<ICueDispatcher, SessionHostedService>();
                     services.AddHostedService(provider => (SessionHostedService)provider.GetRequiredService<ICueDispatcher>());
                 })
+                // the main application form.
+                // call this after configure services.
                 .ConfigureWinForms<MainWindow>()
                 .UseWinFormsLifetime()
                 .Build()
                 .RunAsync();
-        }
-
-        private static IHostBuilder ConfigureConfiguration(this IHostBuilder hostBuilder, string[] args)
-        {
-            return hostBuilder.ConfigureHostConfiguration(configHost =>
-            {
-                configHost
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddCommandLine(args);
-            })
-                .ConfigureAppConfiguration((hostContext, configApp) =>
-                {
-                    configApp
-                        .AddJsonFile("appSettings.json", optional: true)
-                        .AddCommandLine(args);
-                });
         }
     }
 }

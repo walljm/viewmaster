@@ -1,6 +1,6 @@
 using Dapplo.Microsoft.Extensions.Hosting.WinForms;
 using System.Text.Json;
-using ViewMaster.Core.Models;
+using ViewMaster.Core.Models.Export;
 using ViewMaster.Core.Models.Sequences;
 
 namespace ViewMaster.DesktopController

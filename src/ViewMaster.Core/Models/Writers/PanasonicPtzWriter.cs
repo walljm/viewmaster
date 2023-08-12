@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using ViewMaster.Core.Models.Common;
+using ViewMaster.Core.Models.Operations;
 
 namespace ViewMaster.Core.Models.Writers;
 
@@ -25,10 +26,13 @@ public class PanasonicPtzWriter : IDisposable, IWriter
 
     public ushort SendDelay => 135;
 
-    public PanasonicPtzWriter(IPAddress ip)
+    public PanasonicPtzWriter(ushort id, IPAddress ip)
     {
+        this.Id = id;
         this.DestinationIp = ip;
     }
+
+    public ushort Id { get; init; }
 
     public async Task SendPanTilt(short panSpeed, short tiltSpeed)
     {
@@ -69,13 +73,13 @@ public class PanasonicPtzWriter : IDisposable, IWriter
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23Z{zsp}&res=1");
     }
 
-    public async Task SendAction(Action action, short speed)
+    public async Task SendAction(Axis action, short speed)
     {
         var op = action switch
         {
-            Action.Tilt => 'T', // Tilt i.e the Y axis (vertical)
-            Action.Pan => 'P', // Pan i.e. the X axis (horizontal)
-            Action.Zoom => 'Z', // Zoom
+            Axis.Tilt => 'T', // Tilt i.e the Y axis (vertical)
+            Axis.Pan => 'P', // Pan i.e. the X axis (horizontal)
+            Axis.Zoom => 'Z', // Zoom
             _ => throw new NotImplementedException(),
         };
 

@@ -1,12 +1,15 @@
 ﻿using ViewMaster.Core.Models.Common;
+using ViewMaster.Core.Models.Operations;
 
 namespace ViewMaster.Core.Models.Writers;
 
 public interface IWriter
 {
+    ushort Id { get; init; }
+
     ushort SendDelay { get; }
 
-    Task SendAction(Action action, short speed);
+    Task SendAction(Axis action, short speed);
 
     Task SendPanTilt(short panSpeed, short tiltSpeed);
 
