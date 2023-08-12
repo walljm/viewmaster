@@ -25,6 +25,11 @@ public class Coordinate : IEquatable<Coordinate>
         return new Coordinate(Convert.ToUInt16(p.X * (1 / (ushort.MaxValue / 360.0))), Convert.ToUInt16(p.Y * (1 / (ushort.MaxValue / 360.0))));
     }
 
+    public static implicit operator Coordinate(DegreeData p)
+    {
+        return new Degrees(p.Pan, p.Tilt);
+    }
+
     public static Coordinate operator +(Coordinate pt, Coordinate sz) => Add(pt, sz);
 
     public static Coordinate operator -(Coordinate pt, Coordinate sz) => Subtract(pt, sz);

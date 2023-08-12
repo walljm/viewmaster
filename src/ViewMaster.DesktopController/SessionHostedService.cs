@@ -40,7 +40,7 @@ namespace ViewMaster.DesktopController
                             return;
                         }
 
-                        // we use a different sopping token here so we can cancel
+                        // we use a different stopping token here so we can cancel
                         await arguments.Cue.Execute(arguments.CancellationToken).ConfigureAwait(false);
                     }
                 }

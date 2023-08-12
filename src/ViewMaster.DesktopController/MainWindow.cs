@@ -1,35 +1,31 @@
-using Microsoft.Extensions.Hosting;
+using Dapplo.Microsoft.Extensions.Hosting.WinForms;
+using System.Text.Json;
 using ViewMaster.Core.Models;
-using ViewMaster.Core.Models.Common;
-using ViewMaster.Core.Models.Operations;
 using ViewMaster.Core.Models.Sequences;
-using ViewMaster.Core.Models.Writers;
 
 namespace ViewMaster.DesktopController
 {
-    public partial class MainWindow : Form
+    public partial class MainWindow : Form, IWinFormsShell
     {
         private Session currentSession = new(new Sequence("New Session", new List<Cue>()));
         private CancellationTokenSource cancellationTokenSource = new();
         private readonly ICueDispatcher cueDispatcher;
-        private readonly IHostApplicationLifetime hostApplication;
 
-        public MainWindow(ICueDispatcher cueDispatcher, IHostApplicationLifetime hostApplication)
+        public MainWindow(ICueDispatcher cueDispatcher)
         {
             InitializeComponent();
             this.cueDispatcher = cueDispatcher;
-            this.hostApplication = hostApplication;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            var writers = new List<IWriter>() { new LogWriter() };
-            this.currentSession = new(new Sequence("Run in a circle", new List<Cue> {
-                // set zoom to a specific level
-                new Cue(1, "Zoom", new List<CueAction>{new CueAction(writers, new ZoomOperation(1000)) }),
-                new Cue(2, "Pan Left", new List<CueAction>{new CueAction(writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10))}),
-                new Cue(3, "Move",new List<CueAction>{new CueAction( writers, new MoveOperation(new Degrees(180, 90)))}),
-            }));
+            //var writers = new List<IWriter>() { new LogWriter() };
+            //this.currentSession = new(new Sequence("Run in a circle", new List<Cue> {
+            //    // set zoom to a specific level
+            //    new Cue(1, "Zoom", new List<CueAction>{new CueAction(writers, new ZoomOperation(1000)) }),
+            //    new Cue(2, "Pan Left", new List<CueAction>{new CueAction(writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10))}),
+            //    new Cue(3, "Move",new List<CueAction>{new CueAction( writers, new MoveOperation(new Degrees(180, 90)))}),
+            //}));
             InitGrid();
         }
 
@@ -49,7 +45,7 @@ namespace ViewMaster.DesktopController
                 }
                 else if (c.Name == nameof(Cue.Ordinal))
                 {
-                    c.Width = 80;
+                    c.Width = 120;
                     c.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
             }
@@ -74,14 +70,15 @@ namespace ViewMaster.DesktopController
             {
                 //Get the path of specified file
                 var filePath = openFileDialog.FileName;
-
-                var sequence = System.Text.Json.JsonSerializer.Deserialize<SequenceData>(filePath);
+                var data = File.ReadAllText(filePath);
+                var sequence = JsonSerializer.Deserialize<SequenceData>(data, JsonSerializerSettingsProvider.Default);
                 if (sequence is null)
                 {
                     MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 this.currentSession = new Session(sequence);
+                InitGrid();
             }
         }
 
@@ -98,7 +95,7 @@ namespace ViewMaster.DesktopController
                 //Get the path of specified file
                 var filePath = fileDialog.FileName;
 
-                var sequence = System.Text.Json.JsonSerializer.Serialize(this.currentSession.Sequence);
+                var sequence = JsonSerializer.Serialize(this.currentSession.Sequence, JsonSerializerSettingsProvider.Default);
                 if (sequence is null)
                 {
                     MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -127,14 +124,6 @@ namespace ViewMaster.DesktopController
             this.cancellationTokenSource.Cancel();
             this.cancellationTokenSource = new CancellationTokenSource();
             await this.cueDispatcher.DispatchAsync(new CueArguments(cue, this.cancellationTokenSource.Token));
-        }
-
-        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            // this shouldn't happen.  but if it does, it will happen very loudly, forcing it to be addresses quickly. - walljm
-            Environment.ExitCode = -1;
-            this.hostApplication.StopApplication();
-            return;
         }
     }
 }

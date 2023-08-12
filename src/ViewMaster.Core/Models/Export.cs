@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json.Serialization;
-using ViewMaster.Core.Models.Common;
 using ViewMaster.Core.Models.Operations;
 using ViewMaster.Core.Models.Sequences;
 using ViewMaster.Core.Models.Writers;
@@ -22,14 +21,28 @@ public enum OperationType
     PanType2,
 }
 
-public record WriterData(IPAddress Address, WriterType Kind);
+public class WriterData
+{
+    public WriterType Kind { get; set; }
+    public string Label { get; set; } = string.Empty;
+    public IPAddress? Address { get; set; }
+}
 
-public record DegreeData(
-    [Range(0.0, 360.0)] double Pan,
-    [Range(0.0, 360.0)] double Tilt
-);
+public class DegreeData
+{
+    [Range(0.0, 360.0)]
+    public double Pan { get; set; }
+
+    [Range(0.0, 360.0)]
+    public double Tilt { get; set; }
+};
+
+#region Operations
 
 [JsonDerivedType(typeof(MoveOperationData), nameof(OperationType.Move))]
+[JsonDerivedType(typeof(ZoomOperationData), nameof(OperationType.Zoom))]
+[JsonDerivedType(typeof(PanOperationDataType1), nameof(OperationType.PanType1))]
+[JsonDerivedType(typeof(PanOperationDataType2), nameof(OperationType.PanType2))]
 public abstract class OperationData
 {
     public string? Label { get; set; }
@@ -40,7 +53,7 @@ public abstract class OperationData
 
 public class MoveOperationData : OperationData
 {
-    public Degrees? Location { get; set; }
+    public DegreeData? Location { get; set; }
     public override OperationType Kind => OperationType.Move;
 }
 
@@ -54,8 +67,8 @@ public class ZoomOperationData : OperationData
 
 public class PanOperationDataType1 : OperationData
 {
-    public Degrees? Start { get; set; }
-    public Degrees? Stop { get; set; }
+    public DegreeData? Start { get; set; }
+    public DegreeData? Stop { get; set; }
     public TimeSpan TimeSpan { get; set; }
 
     [Range(0, 1.0)]
@@ -69,7 +82,7 @@ public class PanOperationDataType1 : OperationData
 
 public class PanOperationDataType2 : OperationData
 {
-    public Degrees? Start { get; set; }
+    public DegreeData? Start { get; set; }
 
     [Range(0.0, 360.0)]
     public double Angle { get; set; }
@@ -85,14 +98,24 @@ public class PanOperationDataType2 : OperationData
     public override OperationType Kind => OperationType.PanType2;
 }
 
-public record TargetData(IEnumerable<WriterData> Writers, OperationData Operation)
+#endregion Operations
+
+public class TargetData
 {
-    public CueAction ToCueTarget()
+    public IEnumerable<int>? Writers { get; set; }
+    public OperationData? Operation { get; set; }
+
+    public CueAction ToCueTarget(IDictionary<int, WriterData> WriterLookup)
     {
+        if (this.Writers is null || this.Operation is null)
+        {
+            throw new InvalidOperationException();
+        }
+
         return new CueAction(
-            Writers.Select(o => o.Kind switch
+            Writers.Select(o => WriterLookup[o]).Select(o => o.Kind switch
             {
-                WriterType.PtzWriter => (IWriter)new PanasonicPtzWriter(o.Address),
+                WriterType.PtzWriter => (IWriter)new PanasonicPtzWriter(o.Address ?? throw new InvalidOperationException(nameof(o.Address))),
                 WriterType.LogWriter => (IWriter)new LogWriter(),
                 _ => throw new InvalidOperationException($"Unsupported Writer Type: {o.Kind}"),
             }),
@@ -107,21 +130,38 @@ public record TargetData(IEnumerable<WriterData> Writers, OperationData Operatio
     }
 }
 
-public record CueData(int Ordinal, string Label, IEnumerable<TargetData> Targets)
+public class CueData
 {
-    public Cue ToCue()
+    public string Label { get; set; } = string.Empty;
+    public IEnumerable<TargetData>? Targets { get; set; }
+
+    public Cue ToCue(IDictionary<int, WriterData> Writers, int ordinal)
     {
-        return new Cue(Ordinal, Label, Targets.Select(o => o.ToCueTarget()));
+        if (Targets is null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return new Cue(ordinal, Label, Targets.Select(o => o.ToCueTarget(Writers)));
     }
 }
 
-public record SequenceData(string Label, IList<CueData> Cues)
+public record SequenceData
 {
+    public string Label { get; set; } = string.Empty;
+    public IDictionary<int, WriterData>? Writers { get; set; }
+    public IDictionary<int, CueData>? Cues { get; set; }
+
     public Sequence ToSequence()
     {
+        if (Writers is null || Cues is null)
+        {
+            throw new InvalidOperationException();
+        }
+
         return new Sequence(
             Label,
-            Cues.Select(o => o.ToCue())
+            Cues.Select(o => o.Value.ToCue(Writers, o.Key))
                 .OrderBy(o => o.Ordinal)
                 .ToList()
         );

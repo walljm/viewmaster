@@ -34,6 +34,11 @@ public class Degrees : IEquatable<Degrees>
         return new Degrees(Math.Floor(p.X * ushort.MaxValue / 360.0), Math.Floor(p.Y * ushort.MaxValue / 360.0));
     }
 
+    public static implicit operator Degrees(DegreeData p)
+    {
+        return new Degrees(p.Pan, p.Tilt);
+    }
+
     public static Degrees operator +(Degrees pt, Degrees sz) => Add(pt, sz);
 
     public static Degrees operator -(Degrees pt, Degrees sz) => Subtract(pt, sz);
