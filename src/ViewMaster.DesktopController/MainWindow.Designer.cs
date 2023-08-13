@@ -51,7 +51,7 @@
             sequenceGrid.Margin = new Padding(0);
             sequenceGrid.Name = "sequenceGrid";
             sequenceGrid.RowHeadersWidth = 62;
-            sequenceGrid.RowTemplate.Height = 33;
+            sequenceGrid.RowTemplate.Height = 45;
             sequenceGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             sequenceGrid.Size = new Size(1275, 1564);
             sequenceGrid.TabIndex = 0;

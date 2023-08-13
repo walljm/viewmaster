@@ -55,6 +55,7 @@ public record CueAction(IEnumerable<IWriter> Writers, IOperation Operation)
         var psTasks = new List<Task>();
         foreach (var writer in Writers)
         {
+            Debug.WriteLine($"  Writer ({writer.Id})> {Operation.GetType().Name} is executing");
             psTasks.Add(Operation.Execute(writer, cancellationToken));
         }
         await Task.WhenAll(psTasks);

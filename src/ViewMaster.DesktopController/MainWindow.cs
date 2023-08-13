@@ -31,6 +31,8 @@ namespace ViewMaster.DesktopController
 
         private void InitGrid()
         {
+            this.sequenceGrid.SelectionChanged -= this.SequenceGrid_SelectionChanged;
+
             this.sequenceGrid.DataSource = this.currentSession.Sequence.Cues;
             foreach (DataGridViewColumn c in this.sequenceGrid.Columns)
             {
@@ -50,10 +52,8 @@ namespace ViewMaster.DesktopController
                 }
             }
 
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             // set event after grid has initialized to avoid triggering unecessary executions of the same cue.
             this.sequenceGrid.SelectionChanged += this.SequenceGrid_SelectionChanged;
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             this.TriggerCue(this.currentSession?.Sequence?.Cues?.FirstOrDefault()).Wait();
         }
