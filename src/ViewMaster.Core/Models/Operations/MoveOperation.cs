@@ -11,7 +11,7 @@ public class MoveOperation : IOperation
     /// <summary>
     ///  Moves the camera to a specific position
     /// </summary>
-    /// <param name="location">A set of coordinates using degrees, where 0 points down or behind.</param>
+    /// <param name="location">A set of coordinates using degrees, where 0 for pan and tilt points behind.</param>
     public MoveOperation(Degrees location)
     {
         this.coordinate = location;

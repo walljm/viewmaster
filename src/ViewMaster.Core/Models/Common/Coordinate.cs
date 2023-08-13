@@ -23,7 +23,7 @@ public class Coordinate : IEquatable<Coordinate>
 
     public static implicit operator Coordinate(Degrees p)
     {
-        return new Coordinate(Convert.ToUInt16(p.X * (1 / (ushort.MaxValue / 360.0))), Convert.ToUInt16(p.Y * (1 / (ushort.MaxValue / 360.0))));
+        return new Coordinate(Convert.ToUInt16(p.X * (ushort.MaxValue / 360.0)), Convert.ToUInt16(p.Y * (ushort.MaxValue / 360.0)));
     }
 
     public static implicit operator Coordinate(DegreeData p)

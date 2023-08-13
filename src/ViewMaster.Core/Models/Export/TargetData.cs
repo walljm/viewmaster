@@ -9,21 +9,14 @@ public class TargetData
     public IEnumerable<ushort>? Writers { get; set; }
     public OperationData? Operation { get; set; }
 
-    public CueAction ToCueTarget(IDictionary<ushort, WriterData> WriterLookup)
+    public CueOperation ToCueTarget(IDictionary<ushort, IWriter> WriterLookup)
     {
         if (this.Writers is null || this.Operation is null)
         {
             throw new InvalidOperationException();
         }
 
-        return new CueAction(
-            Writers.Select(o => (id: o, writer: WriterLookup[o]))
-                   .Select(o => o.writer.Kind switch
-                    {
-                        WriterType.PtzWriter => (IWriter)new PanasonicPtzWriter(o.id, ThrowIfNull(o.writer.Address)),
-                        WriterType.LogWriter => (IWriter)new LogWriter { Id = o.id },
-                        _ => throw new InvalidOperationException($"Unsupported Writer Type: {o.writer.Kind}"),
-                    }),
+        return new CueOperation(
             Operation switch
             {
                 MoveOperationData o => new MoveOperation(o),
@@ -31,8 +24,7 @@ public class TargetData
                 PanOperationDataType1 o => new PanOperation(o),
                 PanOperationDataType2 o => new PanOperation(o),
                 _ => throw new InvalidOperationException($"Unsupported Operation Type: {Operation.GetType()}"),
-            });
+            },
+            Writers.Select(o => WriterLookup[o]));
     }
-
-    private static T ThrowIfNull<T>(T? o) => o ?? throw new ArgumentNullException();
 }

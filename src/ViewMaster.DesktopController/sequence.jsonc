@@ -1,0 +1,78 @@
+{
+  "label": "Test Sequence 1",
+  "writers": {
+    "1": {
+      "$type": "PtzWriter",
+      "label": "Camera 1",
+      "address": "10.101.0.174"
+    },
+    "2": {
+      "$type": "PtzWriter",
+      "label": "Camera 2",
+      "address": "10.101.0.171"
+    },
+    "3": {
+      "$type": "PtzWriter",
+      "label": "Camera 3",
+      "address": "10.101.0.172"
+    },
+    "4": {
+      "$type": "PtzWriter",
+      "label": "Camera 4",
+      "address": "10.101.0.173"
+    }
+  },
+  "cues": {
+    "0": {
+      "label": "Blank",
+      "targets": []
+    },
+    "1": {
+      "label": "Walk In",
+      "targets": [
+        {
+          "operation": {
+            "$type": "Zoom",
+            "speed": 1000
+          },
+          "writers": [1, 2]
+        },
+        {
+          "operation": {
+            "$type": "Zoom",
+            "speed": 100
+          },
+          "writers": [3, 4]
+        }
+      ]
+    },
+    "2": {
+      "label": "Pan Left",
+      "targets": [
+        {
+          "operation": {
+            "$type": "PanType2",
+            "start": { "pan": 180.0, "tilt": 0.0 }, // pan: 0 is behind, tilt: 0 is down
+            "angle": 280, // with 0,360 being up
+            "timeSpan": "00:00:15", // 15 seconds
+            "scale": 0.2, // between 0 and 1.
+            "zoom": -10 // between -49 and 49 with 0 being stopped
+          },
+          "writers": [2]
+        }
+      ]
+    },
+    "3": {
+      "label": "Move",
+      "targets": [
+        {
+          "operation": {
+            "$type": "Move",
+            "location": { "pan": 180.0, "tilt": 90.0 } // pan: 0 is behind, tilt: 0 is down
+          },
+          "writers": [2]
+        }
+      ]
+    }
+  }
+}

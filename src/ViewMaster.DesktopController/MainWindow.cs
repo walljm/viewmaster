@@ -7,7 +7,7 @@ namespace ViewMaster.DesktopController
 {
     public partial class MainWindow : Form, IWinFormsShell
     {
-        private Session currentSession = new(new Sequence("New Session", new List<Cue>()));
+        private Sequence currentSession = new("New Session", new List<Cue>());
         private CancellationTokenSource cancellationTokenSource = new();
         private readonly ICueDispatcher cueDispatcher;
 
@@ -19,13 +19,17 @@ namespace ViewMaster.DesktopController
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            //var writers = new List<IWriter>() { new LogWriter() };
-            //this.currentSession = new(new Sequence("Run in a circle", new List<Cue> {
-            //    // set zoom to a specific level
-            //    new Cue(1, "Zoom", new List<CueAction>{new CueAction(writers, new ZoomOperation(1000)) }),
-            //    new Cue(2, "Pan Left", new List<CueAction>{new CueAction(writers, new PanOperation(new Degrees(180, 90), 280, TimeSpan.FromSeconds(15), 0.20, -10))}),
-            //    new Cue(3, "Move",new List<CueAction>{new CueAction( writers, new MoveOperation(new Degrees(180, 90)))}),
-            //}));
+            if (File.Exists("./sequence.jsonc"))
+            {
+                var data = File.ReadAllText("./sequence.jsonc");
+                var sequence = JsonSerializer.Deserialize<SequenceData>(data, JsonSerializerSettingsProvider.Default);
+                if (sequence is null)
+                {
+                    MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                this.currentSession = new Sequence(sequence);
+            }
             InitGrid();
         }
 
@@ -33,10 +37,10 @@ namespace ViewMaster.DesktopController
         {
             this.sequenceGrid.SelectionChanged -= this.SequenceGrid_SelectionChanged;
 
-            this.sequenceGrid.DataSource = this.currentSession.Sequence.Cues;
+            this.sequenceGrid.DataSource = this.currentSession.Cues;
             foreach (DataGridViewColumn c in this.sequenceGrid.Columns)
             {
-                if (c.Name == nameof(Cue.Actions))
+                if (c.Name == nameof(Cue.Operations))
                 {
                     c.Visible = false;
                 }
@@ -55,7 +59,7 @@ namespace ViewMaster.DesktopController
             // set event after grid has initialized to avoid triggering unecessary executions of the same cue.
             this.sequenceGrid.SelectionChanged += this.SequenceGrid_SelectionChanged;
 
-            this.TriggerCue(this.currentSession?.Sequence?.Cues?.FirstOrDefault()).Wait();
+            this.TriggerCue(this.currentSession?.Cues?.FirstOrDefault()).Wait();
         }
 
         private void LoadSequenceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -65,6 +69,9 @@ namespace ViewMaster.DesktopController
             openFileDialog.Filter = "ViewMaster files (*.vwm)|*.vwm|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
+            openFileDialog.AddToRecent = true;
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -77,7 +84,7 @@ namespace ViewMaster.DesktopController
                     MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                this.currentSession = new Session(sequence);
+                this.currentSession = new Sequence(sequence);
                 InitGrid();
             }
         }
@@ -95,7 +102,7 @@ namespace ViewMaster.DesktopController
                 //Get the path of specified file
                 var filePath = fileDialog.FileName;
 
-                var sequence = JsonSerializer.Serialize(this.currentSession.Sequence, JsonSerializerSettingsProvider.Default);
+                var sequence = JsonSerializer.Serialize(this.currentSession, JsonSerializerSettingsProvider.Default);
                 if (sequence is null)
                 {
                     MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
