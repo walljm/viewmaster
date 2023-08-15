@@ -8,7 +8,7 @@ public class PanOperation : IOperation
 {
     private const ushort maxSpeed = 49;
 
-    private readonly Coordinate start;
+    private readonly UDegrees16 start;
     private readonly TimeSpan timeSpan;
     private readonly double scale;
     private readonly short zoom;
@@ -25,22 +25,22 @@ public class PanOperation : IOperation
     /// <param name="timeSpan">How long to move the camera</param>
     /// <param name="scale">How fast to move, 1 being MAX, 0.1 being MIN</param>
     /// <exception cref="ArgumentException"></exception>
-    public PanOperation(Degrees start, Degrees stop, TimeSpan timeSpan, double scale, short zoom = 0)
+    public PanOperation(Degrees360 start, Degrees360 stop, TimeSpan timeSpan, double scale, short zoom = 0)
     {
         if (scale < 0 || scale > 1)
         {
             throw new ArgumentException(nameof(scale), "Speed must be a value between 0.1 and 1");
         }
 
-        this.start = start;
+        this.start = start; // implicit conversion to 16 bit int coordinates
         this.timeSpan = timeSpan;
         this.zoom = zoom;
         this.scale = scale;
         this.zoom = zoom;
 
-        var stopCoord = (Coordinate)stop;
-        var panOffset = stopCoord.PanCoordinate - this.start.PanCoordinate;
-        var tiltOffset = stopCoord.TiltCoordinate - this.start.TiltCoordinate
+        var stopCoord = (UDegrees16)stop; // implicit conversion to 16 bit int coordinates
+        var panOffset = stopCoord.PanValue - this.start.PanValue;
+        var tiltOffset = stopCoord.TiltValue - this.start.TiltValue
                          + 0.00001; // hack to prevent divide by 0
         this.absSlope = Math.Abs(tiltOffset / panOffset); // y/x
         this.panDir = panOffset < 0 ? -1 : 1;
@@ -59,14 +59,14 @@ public class PanOperation : IOperation
     /// <param name="timeSpan">How long to move the camera</param>
     /// <param name="scale">How fast to move, 1 being MAX, 0.1 being MIN</param>
     /// <exception cref="ArgumentException"></exception>
-    public PanOperation(Degrees start, double angle, TimeSpan timeSpan, double scale, short zoom = 0)
+    public PanOperation(Degrees360 start, double angle, TimeSpan timeSpan, double scale, short zoom = 0)
     {
         if (scale < 0 || scale > 1)
         {
             throw new ArgumentException(nameof(scale), "Speed must be a value between 0.1 and 1");
         }
 
-        this.start = start;
+        this.start = start; // implicit conversion to 16 bit int coordinates
         this.timeSpan = timeSpan;
         this.scale = scale;
         this.zoom = zoom;

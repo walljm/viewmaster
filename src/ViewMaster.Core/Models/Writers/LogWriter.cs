@@ -30,19 +30,19 @@ public class LogWriter : IWriter
         return Task.CompletedTask;
     }
 
-    public Task SendPositionAbsolute(Coordinate coordinate)
+    public Task SendPositionAbsolute(UDegrees16 coordinate)
     {
         Debug.WriteLine($"{prefix}{nameof(SendPositionAbsolute)}(Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate})");
         return Task.CompletedTask;
     }
 
-    public Task SendPositionSpeedAbsolute(Coordinate coordinate, ushort? speed)
+    public Task SendPositionSpeedAbsolute(UDegrees16 coordinate, ushort? speed)
     {
         Debug.WriteLine($"{prefix}{nameof(SendPositionSpeedAbsolute)}(Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate}, Speed: {speed})");
         return Task.CompletedTask;
     }
 
-    public Task SendPositionRelative(Coordinate coordinate)
+    public Task SendPositionRelative(UDegrees16 coordinate)
     {
         Debug.WriteLine($"{prefix}{nameof(SendPositionRelative)}(Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate})");
         return Task.CompletedTask;

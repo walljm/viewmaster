@@ -6,15 +6,15 @@ namespace ViewMaster.Core.Models.Operations;
 
 public class MoveOperation : IOperation
 {
-    private readonly Coordinate coordinate;
+    private readonly UDegrees16 coordinate;
 
     /// <summary>
     ///  Moves the camera to a specific position
     /// </summary>
     /// <param name="location">A set of coordinates using degrees, where 0 for pan and tilt points behind.</param>
-    public MoveOperation(Degrees location)
+    public MoveOperation(Degrees360 location)
     {
-        this.coordinate = location;
+        this.coordinate = location; // implicit conversion to 16 bit int coordinates
     }
 
     public MoveOperation(MoveOperationData data)

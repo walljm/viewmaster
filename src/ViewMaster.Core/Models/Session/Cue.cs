@@ -29,21 +29,30 @@ public record Cue
     {
         try
         {
-            Debug.WriteLine($"Cue ({Ordinal})> {Label} is executing");
-            this.Status = "Executing";
-            foreach (var target in Operations)
+            Log($"Cue> {Label} is executing");
+
+            // run each operation sequentially. don't try and run them all at the same time.
+            foreach (var operation in Operations)
             {
-                // these should be sequential. don't try and run them all at the same time.
-                await target.Execute(cancellationToken);
+                this.Status = $"Executing {operation.Operation.GetType().Name}...";
+                Log($"  {nameof(CueOperation)}> {operation.Operation.GetType().Name} is executing");
+                await operation.Execute(cancellationToken);
             }
-            this.Status = "Complete";
         }
         catch (TaskCanceledException)
         {
             this.Status = "Cancelled";
-            // NOP: we don't want these to stop program execution.
-            Debug.WriteLine($"Cue ({Ordinal})> {Label} was cancelled.");
+            Log($"Cue> {Label} was cancelled.");
         }
+        finally
+        {
+            this.Status = "Complete";
+        }
+    }
+
+    private void Log(string message)
+    {
+        Debug.WriteLine($"{DateTimeOffset.Now:HH:mm:ss}: ({Ordinal}) {message}");
     }
 };
 
@@ -54,7 +63,7 @@ public record CueOperation(IOperation Operation, IEnumerable<IWriter> Writers)
         var psTasks = new List<Task>();
         foreach (var writer in Writers)
         {
-            Debug.WriteLine($"  Writer ({writer.Id})> {Operation.GetType().Name} is executing");
+            Debug.WriteLine($"    Writer ({writer.Id})> {Operation.GetType().Name} is executing");
             psTasks.Add(Operation.Execute(writer, cancellationToken));
         }
         await Task.WhenAll(psTasks);

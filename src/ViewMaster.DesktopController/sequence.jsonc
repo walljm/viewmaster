@@ -35,14 +35,14 @@
             "$type": "Zoom",
             "speed": 1000
           },
-          "writers": [1, 2]
+          "writers": [ 1, 2 ]
         },
         {
           "operation": {
             "$type": "Zoom",
             "speed": 100
           },
-          "writers": [3, 4]
+          "writers": [ 3, 4 ]
         }
       ]
     },
@@ -52,13 +52,16 @@
         {
           "operation": {
             "$type": "PanType2",
-            "start": { "pan": 180.0, "tilt": 0.0 }, // pan: 0 is behind, tilt: 0 is down
+            "start": {
+              "pan": 0.0, //  pan: 0 is forward
+              "tilt": 0.0 // tilt: 0 is forward
+            }, 
             "angle": 280, // with 0,360 being up
             "timeSpan": "00:00:15", // 15 seconds
             "scale": 0.2, // between 0 and 1.
             "zoom": -10 // between -49 and 49 with 0 being stopped
           },
-          "writers": [2]
+          "writers": [ 2 ]
         }
       ]
     },
@@ -68,9 +71,11 @@
         {
           "operation": {
             "$type": "Move",
-            "location": { "pan": 180.0, "tilt": 90.0 } // pan: 0 is behind, tilt: 0 is down
+            "location": {
+              "pan": 0.0, //  pan: 0 is forward
+              "tilt": 0.0 // tilt: 0 is forward
           },
-          "writers": [2]
+          "writers": [ 2 ]
         }
       ]
     }

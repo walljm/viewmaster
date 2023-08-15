@@ -15,11 +15,11 @@ public interface IWriter
 
     Task SendPanTiltZoom(short panSpeed, short tiltSpeed, short zoom);
 
-    Task SendPositionAbsolute(Coordinate coordinate);
+    Task SendPositionAbsolute(UDegrees16 coordinate);
 
-    Task SendPositionSpeedAbsolute(Coordinate coordinate, ushort? speed);
+    Task SendPositionSpeedAbsolute(UDegrees16 coordinate, ushort? speed);
 
-    Task SendPositionRelative(Coordinate coordinate);
+    Task SendPositionRelative(UDegrees16 coordinate);
 
     Task SendZoomAbsolute(ushort speed);
 

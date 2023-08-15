@@ -83,7 +83,7 @@ public class PanasonicPtzWriter : IDisposable, IWriter
             _ => throw new NotImplementedException(),
         };
 
-        // we expect a number 0 - 49. 0 being stop, 1 being slow progressing faster to up to the max sdpeed of 49.
+        // we expect a number 0 - 49. 0 being stop, 1 being slow progressing faster to up to the max speed of 49.
         if (speed < -49 || speed > 49)
         {
             throw new ArgumentOutOfRangeException("Speed must be between -49 and 49");
@@ -96,22 +96,22 @@ public class PanasonicPtzWriter : IDisposable, IWriter
         _ = await Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23{op}{sp}&res=1");
     }
 
-    public async Task SendPositionAbsolute(Coordinate coordinate)
+    public async Task SendPositionAbsolute(UDegrees16 coordinate)
     {
         // send the api call
-        var pan = coordinate.PanCoordinate.ToString("X").PadLeft(4, '0');
-        var tilt = coordinate.TiltCoordinate.ToString("X").PadLeft(4, '0');
+        var pan = coordinate.PanValue.ToString("X").PadLeft(4, '0');
+        var tilt = coordinate.TiltValue.ToString("X").PadLeft(4, '0');
         _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23APC{pan}{tilt}&res=1");
     }
 
-    public async Task SendPositionRelative(Coordinate coordinate)
+    public async Task SendPositionRelative(UDegrees16 coordinate)
     {
-        var pan = coordinate.PanCoordinate.ToString("X").PadLeft(4, '0');
-        var tilt = coordinate.TiltCoordinate.ToString("X").PadLeft(4, '0');
+        var pan = coordinate.PanValue.ToString("X").PadLeft(4, '0');
+        var tilt = coordinate.TiltValue.ToString("X").PadLeft(4, '0');
         _ = await this.Client.GetAsync($"http://{this.DestinationIp}/cgi-bin/aw_ptz?cmd=%23RPC{pan}{tilt}&res=1");
     }
 
-    public async Task SendPositionSpeedAbsolute(Coordinate coordinate, ushort? speed)
+    public async Task SendPositionSpeedAbsolute(UDegrees16 coordinate, ushort? speed)
     {
         if (speed > 90)
         {
@@ -119,8 +119,8 @@ public class PanasonicPtzWriter : IDisposable, IWriter
         }
 
         // send the api call
-        var pan = coordinate.PanCoordinate.ToString("X").PadLeft(4, '0');
-        var tilt = coordinate.TiltCoordinate.ToString("X").PadLeft(4, '0');
+        var pan = coordinate.PanValue.ToString("X").PadLeft(4, '0');
+        var tilt = coordinate.TiltValue.ToString("X").PadLeft(4, '0');
         var tbl = speed switch
         {
             _ when speed <= 30 => "0",
