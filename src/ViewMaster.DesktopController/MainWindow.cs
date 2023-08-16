@@ -62,7 +62,7 @@ namespace ViewMaster.DesktopController
             this.TriggerCue(this.currentSession?.Cues?.FirstOrDefault()).Wait();
         }
 
-        private void LoadSequenceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoadSequenceToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             using var openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = "c:\\";
@@ -89,7 +89,7 @@ namespace ViewMaster.DesktopController
             }
         }
 
-        private void SaveSequenceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveSequenceToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             using var fileDialog = new SaveFileDialog();
             fileDialog.InitialDirectory = "c:\\";
@@ -112,7 +112,7 @@ namespace ViewMaster.DesktopController
             }
         }
 
-        private async void SequenceGrid_SelectionChanged(object sender, EventArgs e)
+        private async void SequenceGrid_SelectionChanged(object? sender, EventArgs e)
         {
             if (this.sequenceGrid?.CurrentRow?.DataBoundItem is not Cue cue)
             {
@@ -131,6 +131,12 @@ namespace ViewMaster.DesktopController
             this.cancellationTokenSource.Cancel();
             this.cancellationTokenSource = new CancellationTokenSource();
             await this.cueDispatcher.DispatchAsync(new CueArguments(cue, this.cancellationTokenSource.Token));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var frm = new CameraView();
+            frm.Show();
         }
     }
 }

@@ -55,7 +55,7 @@
             "start": {
               "pan": 0.0, //  pan: 0 is forward
               "tilt": 0.0 // tilt: 0 is forward
-            }, 
+            },
             "angle": 280, // with 0,360 being up
             "timeSpan": "00:00:15", // 15 seconds
             "scale": 0.2, // between 0 and 1.
@@ -74,6 +74,7 @@
             "location": {
               "pan": 0.0, //  pan: 0 is forward
               "tilt": 0.0 // tilt: 0 is forward
+            }
           },
           "writers": [ 2 ]
         }

@@ -32,19 +32,19 @@ public class LogWriter : IWriter
 
     public Task SendPositionAbsolute(UDegrees16 coordinate)
     {
-        Debug.WriteLine($"{prefix}{nameof(SendPositionAbsolute)}(Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate})");
+        Debug.WriteLine($"{prefix}{nameof(SendPositionAbsolute)}(Pan: {coordinate.PanValue}, Tilt: {coordinate.TiltValue})");
         return Task.CompletedTask;
     }
 
     public Task SendPositionSpeedAbsolute(UDegrees16 coordinate, ushort? speed)
     {
-        Debug.WriteLine($"{prefix}{nameof(SendPositionSpeedAbsolute)}(Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate}, Speed: {speed})");
+        Debug.WriteLine($"{prefix}{nameof(SendPositionSpeedAbsolute)}(Pan: {coordinate.PanValue}, Tilt: {coordinate.TiltValue}, Speed: {speed})");
         return Task.CompletedTask;
     }
 
     public Task SendPositionRelative(UDegrees16 coordinate)
     {
-        Debug.WriteLine($"{prefix}{nameof(SendPositionRelative)}(Pan: {coordinate.PanCoordinate}, Tilt: {coordinate.TiltCoordinate})");
+        Debug.WriteLine($"{prefix}{nameof(SendPositionRelative)}(Pan: {coordinate.PanValue}, Tilt: {coordinate.TiltValue})");
         return Task.CompletedTask;
     }
 
