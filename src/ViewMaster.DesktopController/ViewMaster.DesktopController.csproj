@@ -5,7 +5,8 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<ApplicationDefaultFont>Segoe UI, 11pt, style=regular</ApplicationDefaultFont>
   </PropertyGroup>
 
   <ItemGroup>

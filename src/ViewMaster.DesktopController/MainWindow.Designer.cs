@@ -67,9 +67,9 @@
             grdCues.Margin = new Padding(0);
             grdCues.Name = "grdCues";
             grdCues.RowHeadersWidth = 62;
-            grdCues.RowTemplate.Height = 45;
+            grdCues.RowTemplate.Height = 60;
             grdCues.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grdCues.Size = new Size(969, 1050);
+            grdCues.Size = new Size(969, 1291);
             grdCues.TabIndex = 0;
             // 
             // menuStrip1
@@ -79,8 +79,8 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Padding = new Padding(10, 3, 0, 3);
-            menuStrip1.Size = new Size(1832, 56);
+            menuStrip1.Padding = new Padding(12, 4, 0, 4);
+            menuStrip1.Size = new Size(2155, 58);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -111,8 +111,8 @@
             // 
             splitContainer1.Dock = DockStyle.Fill;
             splitContainer1.FixedPanel = FixedPanel.Panel1;
-            splitContainer1.Location = new Point(0, 56);
-            splitContainer1.Margin = new Padding(5);
+            splitContainer1.Location = new Point(0, 58);
+            splitContainer1.Margin = new Padding(6, 6, 6, 6);
             splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -122,9 +122,9 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(tabControl1);
-            splitContainer1.Size = new Size(1832, 1050);
+            splitContainer1.Size = new Size(2155, 1291);
             splitContainer1.SplitterDistance = 969;
-            splitContainer1.SplitterWidth = 17;
+            splitContainer1.SplitterWidth = 20;
             splitContainer1.TabIndex = 2;
             // 
             // tabControl1
@@ -133,10 +133,10 @@
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Dock = DockStyle.Fill;
             tabControl1.Location = new Point(0, 0);
-            tabControl1.Margin = new Padding(5);
+            tabControl1.Margin = new Padding(6, 6, 6, 6);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(846, 1050);
+            tabControl1.Size = new Size(1166, 1291);
             tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -147,74 +147,82 @@
             tabPage1.Controls.Add(lblLabel);
             tabPage1.Controls.Add(ctlOrdinal);
             tabPage1.Controls.Add(lblOrdinal);
-            tabPage1.Location = new Point(10, 58);
-            tabPage1.Margin = new Padding(5);
+            tabPage1.Location = new Point(10, 67);
+            tabPage1.Margin = new Padding(7, 7, 7, 7);
             tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(5);
-            tabPage1.Size = new Size(826, 982);
+            tabPage1.Padding = new Padding(7, 7, 7, 7);
+            tabPage1.Size = new Size(1146, 1214);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Cue Details";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // ctlOperations
             // 
+            ctlOperations.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ctlOperations.FormattingEnabled = true;
-            ctlOperations.ItemHeight = 41;
-            ctlOperations.Location = new Point(17, 212);
+            ctlOperations.ItemHeight = 50;
+            ctlOperations.Location = new Point(20, 259);
+            ctlOperations.Margin = new Padding(4, 4, 4, 4);
             ctlOperations.Name = "ctlOperations";
-            ctlOperations.Size = new Size(796, 455);
+            ctlOperations.Size = new Size(936, 554);
             ctlOperations.TabIndex = 7;
             // 
             // lblOperations
             // 
             lblOperations.AutoSize = true;
-            lblOperations.Location = new Point(11, 156);
+            lblOperations.Location = new Point(13, 190);
+            lblOperations.Margin = new Padding(4, 0, 4, 0);
             lblOperations.Name = "lblOperations";
-            lblOperations.Size = new Size(165, 41);
+            lblOperations.Size = new Size(204, 50);
             lblOperations.TabIndex = 6;
             lblOperations.Text = "Operations";
             // 
             // ctlLabel
             // 
             ctlLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ctlLabel.Location = new Point(125, 90);
+            ctlLabel.Location = new Point(147, 110);
+            ctlLabel.Margin = new Padding(4, 4, 4, 4);
             ctlLabel.Name = "ctlLabel";
-            ctlLabel.Size = new Size(689, 47);
+            ctlLabel.Size = new Size(981, 56);
             ctlLabel.TabIndex = 3;
             // 
             // lblLabel
             // 
             lblLabel.AutoSize = true;
-            lblLabel.Location = new Point(24, 90);
+            lblLabel.Location = new Point(28, 110);
+            lblLabel.Margin = new Padding(4, 0, 4, 0);
             lblLabel.Name = "lblLabel";
-            lblLabel.Size = new Size(95, 41);
+            lblLabel.Size = new Size(116, 50);
             lblLabel.TabIndex = 2;
             lblLabel.Text = "Label:";
             // 
             // ctlOrdinal
             // 
-            ctlOrdinal.Location = new Point(125, 21);
+            ctlOrdinal.Location = new Point(147, 26);
+            ctlOrdinal.Margin = new Padding(5, 5, 5, 5);
             ctlOrdinal.Name = "ctlOrdinal";
-            ctlOrdinal.Size = new Size(124, 47);
+            ctlOrdinal.Size = new Size(146, 56);
             ctlOrdinal.TabIndex = 1;
             // 
             // lblOrdinal
             // 
             lblOrdinal.AutoSize = true;
-            lblOrdinal.Location = new Point(17, 21);
+            lblOrdinal.Location = new Point(20, 26);
+            lblOrdinal.Margin = new Padding(4, 0, 4, 0);
             lblOrdinal.Name = "lblOrdinal";
-            lblOrdinal.Size = new Size(102, 41);
+            lblOrdinal.Size = new Size(125, 50);
             lblOrdinal.TabIndex = 0;
             lblOrdinal.Text = "Order:";
             // 
             // tabPage2
             // 
             tabPage2.Controls.Add(grdCameras);
-            tabPage2.Location = new Point(10, 58);
-            tabPage2.Margin = new Padding(5);
+            tabPage2.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            tabPage2.Location = new Point(10, 67);
+            tabPage2.Margin = new Padding(7, 7, 7, 7);
             tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(5);
-            tabPage2.Size = new Size(826, 982);
+            tabPage2.Padding = new Padding(7, 7, 7, 7);
+            tabPage2.Size = new Size(975, 1203);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Cameras";
             tabPage2.UseVisualStyleBackColor = true;
@@ -224,25 +232,25 @@
             grdCameras.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             grdCameras.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             grdCameras.Dock = DockStyle.Fill;
-            grdCameras.Location = new Point(5, 5);
-            grdCameras.Margin = new Padding(5);
+            grdCameras.Location = new Point(7, 7);
+            grdCameras.Margin = new Padding(6, 6, 6, 6);
             grdCameras.Name = "grdCameras";
             grdCameras.RowHeadersWidth = 62;
-            grdCameras.RowTemplate.Height = 45;
-            grdCameras.Size = new Size(816, 972);
+            grdCameras.RowTemplate.Height = 60;
+            grdCameras.Size = new Size(961, 1189);
             grdCameras.TabIndex = 0;
             grdCameras.CellDoubleClick += this.GrdCameras_CellDoubleClick;
             // 
             // MainWindow
             // 
-            this.AutoScaleDimensions = new SizeF(17F, 41F);
+            this.AutoScaleDimensions = new SizeF(20F, 50F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(1832, 1106);
+            this.ClientSize = new Size(2155, 1349);
             this.Controls.Add(splitContainer1);
             this.Controls.Add(menuStrip1);
             this.Icon = (Icon)resources.GetObject("$this.Icon");
             this.MainMenuStrip = menuStrip1;
-            this.Margin = new Padding(5);
+            this.Margin = new Padding(6, 6, 6, 6);
             this.Name = "MainWindow";
             this.Text = "View Master";
             this.Load += this.MainWindow_Load;
