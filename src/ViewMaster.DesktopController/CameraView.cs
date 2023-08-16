@@ -1,19 +1,24 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System.Reflection;
+using ViewMaster.Core.Models.Export;
 
 namespace ViewMaster.DesktopController;
 
 public partial class CameraView : Form
 {
     private const string UrlBase = "http://cameraview/";
+    private readonly WriterData Camera;
 
-    public CameraView()
+    public CameraView(WriterData camera)
     {
-        InitializeComponent();
+        this.Camera = camera;
 
-        webView.CoreWebView2InitializationCompleted += this.WebView_CoreWebView2InitializationCompleted;
+        InitializeComponent();
+        this.Text = $"{camera.Label} ({camera.Address})";
+
         webView.EnsureCoreWebView2Async();
-        webView.Source = new Uri($"{UrlBase}camera-view.html");
+        webView.CoreWebView2InitializationCompleted += this.WebView_CoreWebView2InitializationCompleted;
+        webView.Source = new Uri($"http://{this.Camera.Address}/live/index.html");
     }
 
     private void WebView_CoreWebView2InitializationCompleted(object? sender, CoreWebView2InitializationCompletedEventArgs e)
@@ -110,5 +115,5 @@ internal class ManagedStream : Stream
         throw new NotImplementedException();
     }
 
-    private Stream s_;
+    private readonly Stream s_;
 }

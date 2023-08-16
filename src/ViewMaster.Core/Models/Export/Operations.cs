@@ -9,6 +9,7 @@ public enum OperationType
     Zoom,
     PanType1,
     PanType2,
+    Circle,
 }
 
 [JsonDerivedType(typeof(MoveOperationData), nameof(OperationType.Move))]

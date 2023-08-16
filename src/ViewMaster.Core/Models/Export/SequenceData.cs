@@ -9,7 +9,7 @@ public record SequenceData
     public IDictionary<ushort, WriterData>? Writers { get; set; }
     public IDictionary<ushort, CueData>? Cues { get; set; }
 
-    public IList<Cue> ToCueList()
+    public Sequence ToSequence()
     {
         if (Writers is null || Cues is null)
         {
@@ -23,9 +23,17 @@ public record SequenceData
             _ => throw new InvalidOperationException($"Unsupported Writer Type: {o.Value.Kind}"),
         }).ToDictionary(k => k.Id, v => v);
 
-        return Cues.Select(o => o.Value.ToCue(writers, o.Key))
-                .OrderBy(o => o.Ordinal)
-                .ToList()
+        return new Sequence(
+                this.Label,
+                Cues
+                    .Select(o => o.Value.ToCue(writers, o.Key))
+                    .OrderBy(o => o.Ordinal)
+                    .ToList(),
+                this.Writers
+                    .OrderBy(o => o.Key)
+                    .Select(o => o.Value)
+                    .ToList()
+                )
         ;
     }
 

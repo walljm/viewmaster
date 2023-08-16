@@ -7,7 +7,7 @@ namespace ViewMaster.DesktopController
 {
     public partial class MainWindow : Form, IWinFormsShell
     {
-        private Sequence currentSession = new("New Session", new List<Cue>());
+        private Sequence currentSession = new("New Session", new List<Cue>(), new List<WriterData>());
         private CancellationTokenSource cancellationTokenSource = new();
         private readonly ICueDispatcher cueDispatcher;
 
@@ -17,49 +17,16 @@ namespace ViewMaster.DesktopController
             this.cueDispatcher = cueDispatcher;
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
+        private async void MainWindow_Load(object sender, EventArgs e)
         {
             if (File.Exists("./sequence.jsonc"))
             {
-                var data = File.ReadAllText("./sequence.jsonc");
-                var sequence = JsonSerializer.Deserialize<SequenceData>(data, JsonSerializerSettingsProvider.Default);
-                if (sequence is null)
-                {
-                    MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                this.currentSession = new Sequence(sequence);
+                this.LoadSequence("./sequence.jsonc");
             }
-            InitGrid();
-        }
-
-        private void InitGrid()
-        {
-            this.sequenceGrid.SelectionChanged -= this.SequenceGrid_SelectionChanged;
-
-            this.sequenceGrid.DataSource = this.currentSession.Cues;
-            foreach (DataGridViewColumn c in this.sequenceGrid.Columns)
+            else
             {
-                if (c.Name == nameof(Cue.Operations))
-                {
-                    c.Visible = false;
-                }
-                else if (c.Name == nameof(Cue.Label))
-                {
-                    c.Width = 410;
-                    c.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-                }
-                else if (c.Name == nameof(Cue.Ordinal))
-                {
-                    c.Width = 120;
-                    c.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
+                await InitSequenceGrid();
             }
-
-            // set event after grid has initialized to avoid triggering unecessary executions of the same cue.
-            this.sequenceGrid.SelectionChanged += this.SequenceGrid_SelectionChanged;
-
-            this.TriggerCue(this.currentSession?.Cues?.FirstOrDefault()).Wait();
         }
 
         private void LoadSequenceToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -75,17 +42,7 @@ namespace ViewMaster.DesktopController
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                //Get the path of specified file
-                var filePath = openFileDialog.FileName;
-                var data = File.ReadAllText(filePath);
-                var sequence = JsonSerializer.Deserialize<SequenceData>(data, JsonSerializerSettingsProvider.Default);
-                if (sequence is null)
-                {
-                    MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                this.currentSession = new Sequence(sequence);
-                InitGrid();
+                this.LoadSequence(openFileDialog.FileName);
             }
         }
 
@@ -114,11 +71,94 @@ namespace ViewMaster.DesktopController
 
         private async void SequenceGrid_SelectionChanged(object? sender, EventArgs e)
         {
-            if (this.sequenceGrid?.CurrentRow?.DataBoundItem is not Cue cue)
+            if (this.grdCues?.CurrentRow?.DataBoundItem is not Cue cue)
             {
                 return;
             }
+
+            _ = UpdateCueDetails(cue);
+
             await TriggerCue(cue);
+        }
+
+        private void GrdCameras_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (this.grdCameras?.CurrentRow?.DataBoundItem is not WriterData writer)
+            {
+                return;
+            }
+            var frm = new CameraView(writer);
+            frm.Show();
+        }
+
+        private async void LoadSequence(string filePath)
+        {
+            var data = File.ReadAllText(filePath);
+            var sequence = JsonSerializer.Deserialize<SequenceData>(data, JsonSerializerSettingsProvider.Default);
+            if (sequence is null)
+            {
+                MessageBox.Show("File was in the wrong format!", "Invalid Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            this.currentSession = sequence.ToSequence();
+            await InitSequenceGrid();
+        }
+
+        private async Task InitSequenceGrid()
+        {
+            this.grdCues.SelectionChanged -= this.SequenceGrid_SelectionChanged;
+
+            this.grdCues.DataSource = this.currentSession.Cues;
+            foreach (DataGridViewColumn c in this.grdCues.Columns)
+            {
+                if (c.Name == nameof(Cue.Operations))
+                {
+                    c.Visible = false;
+                }
+                else if (c.Name == nameof(Cue.Label))
+                {
+                    c.Width = 410;
+                    c.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                }
+                else if (c.Name == nameof(Cue.Ordinal))
+                {
+                    c.Width = 120;
+                    c.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+            }
+
+            // set event after grid has initialized to avoid triggering unecessary executions of the same cue.
+            this.grdCues.SelectionChanged += this.SequenceGrid_SelectionChanged;
+
+            var firstCue = this.currentSession?.Cues?.FirstOrDefault();
+            await this.TriggerCue(firstCue);
+
+            this.grdCameras.DataSource = this.currentSession?.Writers ?? new List<WriterData>();
+
+            _ = UpdateCueDetails(firstCue);
+        }
+
+        private Task UpdateCueDetails(Cue? cue)
+        {
+            if (cue is null)
+            {
+                return Task.CompletedTask;
+            }
+
+            this.ctlLabel.Text = cue.Label;
+            this.ctlOrdinal.Value = cue.Ordinal;
+
+            // Create columns for the items and subitems.
+            // Width of -2 indicates auto-size.
+            this.ctlOperations.Columns.Add("Operation Type", -2, HorizontalAlignment.Left);
+            this.ctlOperations.Columns.Add("Column 2", -2, HorizontalAlignment.Left);
+
+            //Add the items to the ListView.
+            this.ctlOperations.Items.AddRange(cue.Operations.Select(o =>
+                new ListViewItem(o.Operation.Kind.ToString())
+            ).ToArray());
+
+            return Task.CompletedTask;
         }
 
         private async Task TriggerCue(Cue? cue)
@@ -131,12 +171,6 @@ namespace ViewMaster.DesktopController
             this.cancellationTokenSource.Cancel();
             this.cancellationTokenSource = new CancellationTokenSource();
             await this.cueDispatcher.DispatchAsync(new CueArguments(cue, this.cancellationTokenSource.Token));
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var frm = new CameraView();
-            frm.Show();
         }
     }
 }

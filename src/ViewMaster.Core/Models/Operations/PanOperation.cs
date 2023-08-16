@@ -4,7 +4,7 @@ using ViewMaster.Core.Models.Writers;
 
 namespace ViewMaster.Core.Models.Operations;
 
-public class PanOperation : IOperation
+public class PanOperation : Operation
 {
     private const ushort maxSpeed = 49;
 
@@ -25,7 +25,8 @@ public class PanOperation : IOperation
     /// <param name="timeSpan">How long to move the camera</param>
     /// <param name="scale">How fast to move, 1 being MAX, 0.1 being MIN</param>
     /// <exception cref="ArgumentException"></exception>
-    public PanOperation(Degrees360 start, Degrees360 stop, TimeSpan timeSpan, double scale, short zoom = 0)
+    public PanOperation(string label, Degrees360 start, Degrees360 stop, TimeSpan timeSpan, double scale, short zoom = 0)
+        : base(label, OperationType.PanType1)
     {
         if (scale < 0 || scale > 1)
         {
@@ -47,7 +48,8 @@ public class PanOperation : IOperation
         this.tiltDir = tiltOffset < 0 ? -1 : 1;
     }
 
-    public PanOperation(PanOperationDataType1 o) : this(ThrowIfNull(o.Start), ThrowIfNull(o.Stop), o.TimeSpan, o.Scale, o.Zoom)
+    public PanOperation(PanOperationDataType1 o)
+        : this(o.Label ?? string.Empty, ThrowIfNull(o.Start), ThrowIfNull(o.Stop), o.TimeSpan, o.Scale, o.Zoom)
     {
     }
 
@@ -59,7 +61,8 @@ public class PanOperation : IOperation
     /// <param name="timeSpan">How long to move the camera</param>
     /// <param name="scale">How fast to move, 1 being MAX, 0.1 being MIN</param>
     /// <exception cref="ArgumentException"></exception>
-    public PanOperation(Degrees360 start, double angle, TimeSpan timeSpan, double scale, short zoom = 0)
+    public PanOperation(string label, Degrees360 start, double angle, TimeSpan timeSpan, double scale, short zoom = 0)
+        : base(label, OperationType.PanType2)
     {
         if (scale < 0 || scale > 1)
         {
@@ -76,13 +79,14 @@ public class PanOperation : IOperation
         this.tiltDir = angle < 90 || angle > 270 ? 1 : -1;
     }
 
-    public PanOperation(PanOperationDataType2 o) : this(ThrowIfNull(o.Start), o.Angle, o.TimeSpan, o.Scale, o.Zoom)
+    public PanOperation(PanOperationDataType2 o)
+        : this(o.Label ?? string.Empty, ThrowIfNull(o.Start), o.Angle, o.TimeSpan, o.Scale, o.Zoom)
     {
     }
 
     private static T ThrowIfNull<T>(T? o) => o ?? throw new ArgumentNullException();
 
-    public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
+    public override async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
         await writer.SendStop();
         await Task.Delay(writer.SendDelay, cancellationToken);

@@ -11,26 +11,21 @@ public class Sequence
         ArgumentNullException.ThrowIfNull(sequence.Cues, nameof(sequence));
         this.Label = sequence.Label;
         this.Cues = sequence.Cues.OrderBy(o => o.Ordinal).ToList();
+        this.Writers = sequence.Writers;
     }
 
-    public Sequence(SequenceData sequence)
-    {
-        ArgumentNullException.ThrowIfNull(sequence.Cues, nameof(sequence));
-
-        this.Label = sequence.Label;
-        this.Cues = sequence.ToCueList();
-    }
-
-    public Sequence(string label, IList<Cue> cues)
+    public Sequence(string label, IList<Cue> cues, IList<WriterData> writers)
     {
         ArgumentNullException.ThrowIfNull(cues, nameof(cues));
 
         this.Label = label ?? string.Empty;
         this.Cues = cues.OrderBy(o => o.Ordinal).ToList();
+        this.Writers = writers;
     }
 
     public string Label { get; init; }
     public IList<Cue> Cues { get; init; }
+    public IList<WriterData> Writers { get; init; }
 
     public async Task<bool> FireNextCue(CancellationToken cancellationToken = default)
     {

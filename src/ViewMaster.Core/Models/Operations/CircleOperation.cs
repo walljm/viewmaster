@@ -1,8 +1,9 @@
-﻿using ViewMaster.Core.Models.Writers;
+﻿using ViewMaster.Core.Models.Export;
+using ViewMaster.Core.Models.Writers;
 
 namespace ViewMaster.Core.Models.Operations;
 
-public class CircleOperation : IOperation
+public class CircleOperation : Operation
 {
     /// <summary>
     /// This is as fast as the panasonic cameras can recieve requests.
@@ -20,7 +21,7 @@ public class CircleOperation : IOperation
     /// <param name="scale">Determines the size of the circle by changing the max speed
     /// of the motion of the camera. MIN is 0.1, MAX is 1.
     /// </param>
-    public CircleOperation(TimeSpan timeSpan, double scale)
+    public CircleOperation(string label, TimeSpan timeSpan, double scale) : base(label, OperationType.Circle)
     {
         this.timeSpan = timeSpan;
 
@@ -31,7 +32,7 @@ public class CircleOperation : IOperation
         this.scale = scale;
     }
 
-    public async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
+    public override async Task Execute(IWriter writer, CancellationToken cancellationToken = default)
     {
         await writer.SendStop();
         await Task.Delay(writer.SendDelay, cancellationToken);
