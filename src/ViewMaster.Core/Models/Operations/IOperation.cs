@@ -25,4 +25,9 @@ public abstract class Operation : IOperation
     public OperationType Kind { get; }
 
     public abstract Task Execute(IWriter writer, CancellationToken cancellationToken);
+
+    public override string ToString()
+    {
+        return $"{this.GetType().Name}: {Label}";
+    }
 }

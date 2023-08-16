@@ -37,8 +37,8 @@
             splitContainer1 = new SplitContainer();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            ctlOperations = new ListBox();
             lblOperations = new Label();
-            ctlOperations = new ListView();
             ctlLabel = new TextBox();
             lblLabel = new Label();
             ctlOrdinal = new NumericUpDown();
@@ -141,8 +141,8 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(lblOperations);
             tabPage1.Controls.Add(ctlOperations);
+            tabPage1.Controls.Add(lblOperations);
             tabPage1.Controls.Add(ctlLabel);
             tabPage1.Controls.Add(lblLabel);
             tabPage1.Controls.Add(ctlOrdinal);
@@ -156,35 +156,36 @@
             tabPage1.Text = "Cue Details";
             tabPage1.UseVisualStyleBackColor = true;
             // 
+            // ctlOperations
+            // 
+            ctlOperations.FormattingEnabled = true;
+            ctlOperations.ItemHeight = 41;
+            ctlOperations.Location = new Point(17, 212);
+            ctlOperations.Name = "ctlOperations";
+            ctlOperations.Size = new Size(796, 455);
+            ctlOperations.TabIndex = 7;
+            // 
             // lblOperations
             // 
             lblOperations.AutoSize = true;
-            lblOperations.Location = new Point(18, 154);
+            lblOperations.Location = new Point(11, 156);
             lblOperations.Name = "lblOperations";
             lblOperations.Size = new Size(165, 41);
             lblOperations.TabIndex = 6;
             lblOperations.Text = "Operations";
             // 
-            // ctlOperations
-            // 
-            ctlOperations.Location = new Point(17, 222);
-            ctlOperations.Name = "ctlOperations";
-            ctlOperations.Size = new Size(796, 276);
-            ctlOperations.TabIndex = 4;
-            ctlOperations.UseCompatibleStateImageBehavior = false;
-            // 
             // ctlLabel
             // 
             ctlLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ctlLabel.Location = new Point(120, 90);
+            ctlLabel.Location = new Point(125, 90);
             ctlLabel.Name = "ctlLabel";
-            ctlLabel.Size = new Size(694, 47);
+            ctlLabel.Size = new Size(689, 47);
             ctlLabel.TabIndex = 3;
             // 
             // lblLabel
             // 
             lblLabel.AutoSize = true;
-            lblLabel.Location = new Point(18, 91);
+            lblLabel.Location = new Point(24, 90);
             lblLabel.Name = "lblLabel";
             lblLabel.Size = new Size(95, 41);
             lblLabel.TabIndex = 2;
@@ -192,9 +193,9 @@
             // 
             // ctlOrdinal
             // 
-            ctlOrdinal.Location = new Point(274, 21);
+            ctlOrdinal.Location = new Point(125, 21);
             ctlOrdinal.Name = "ctlOrdinal";
-            ctlOrdinal.Size = new Size(99, 47);
+            ctlOrdinal.Size = new Size(124, 47);
             ctlOrdinal.TabIndex = 1;
             // 
             // lblOrdinal
@@ -202,9 +203,9 @@
             lblOrdinal.AutoSize = true;
             lblOrdinal.Location = new Point(17, 21);
             lblOrdinal.Name = "lblOrdinal";
-            lblOrdinal.Size = new Size(254, 41);
+            lblOrdinal.Size = new Size(102, 41);
             lblOrdinal.TabIndex = 0;
-            lblOrdinal.Text = "Ordinal (Position):";
+            lblOrdinal.Text = "Order:";
             // 
             // tabPage2
             // 
@@ -279,6 +280,6 @@
         private NumericUpDown ctlOrdinal;
         private Label lblOrdinal;
         private Label lblOperations;
-        private ListView ctlOperations;
+        private ListBox ctlOperations;
     }
 }

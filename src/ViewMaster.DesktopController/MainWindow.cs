@@ -87,8 +87,11 @@ namespace ViewMaster.DesktopController
             {
                 return;
             }
-            var frm = new CameraView(writer);
-            frm.Show();
+            if (writer.Kind == WriterType.PtzWriter)
+            {
+                var frm = new CameraView(writer);
+                frm.Show();
+            }
         }
 
         private async void LoadSequence(string filePath)
@@ -147,16 +150,7 @@ namespace ViewMaster.DesktopController
 
             this.ctlLabel.Text = cue.Label;
             this.ctlOrdinal.Value = cue.Ordinal;
-
-            // Create columns for the items and subitems.
-            // Width of -2 indicates auto-size.
-            this.ctlOperations.Columns.Add("Operation Type", -2, HorizontalAlignment.Left);
-            this.ctlOperations.Columns.Add("Column 2", -2, HorizontalAlignment.Left);
-
-            //Add the items to the ListView.
-            this.ctlOperations.Items.AddRange(cue.Operations.Select(o =>
-                new ListViewItem(o.Operation.Kind.ToString())
-            ).ToArray());
+            this.ctlOperations.DataSource = cue.Operations.Select(o => o.Operation).ToList();
 
             return Task.CompletedTask;
         }

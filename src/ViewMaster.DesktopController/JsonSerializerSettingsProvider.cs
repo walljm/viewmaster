@@ -26,11 +26,11 @@ namespace ViewMaster.DesktopController
             options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.AllowTrailingCommas = true;
-            options.PropertyNameCaseInsensitive = true;
             options.WriteIndented = true;
             options.ReadCommentHandling = JsonCommentHandling.Skip;
 
             options.Converters.Add(new IPAddressConverter());
+            options.Converters.Add(new JsonStringEnumConverter());
             options.Converters.Add(new JsonStringEnumConverter());
         }
 

@@ -2,25 +2,41 @@
   "label": "Test Sequence 1",
   "writers": {
     "1": {
-      "$type": "PtzWriter",
-      "label": "Camera 1",
-      "address": "10.101.0.174"
+      "kind": "LogWriter",
+      "label": "Camera 1"
     },
     "2": {
-      "$type": "PtzWriter",
-      "label": "Camera 2",
-      "address": "10.101.0.171"
+      "kind": "LogWriter",
+      "label": "Camera 2"
     },
     "3": {
-      "$type": "PtzWriter",
-      "label": "Camera 3",
-      "address": "10.101.0.172"
+      "kind": "LogWriter",
+      "label": "Camera 3"
     },
     "4": {
-      "$type": "PtzWriter",
-      "label": "Camera 4",
-      "address": "10.101.0.173"
+      "kind": "LogWriter",
+      "label": "Camera 4"
     }
+    //"1": {
+    //  "kind": "PtzWriter",
+    //  "label": "Camera 1",
+    //  "address": "10.101.0.174"
+    //},
+    //"2": {
+    //  "kind": "PtzWriter",
+    //  "label": "Camera 2",
+    //  "address": "10.101.0.171"
+    //},
+    //"3": {
+    //  "kind": "PtzWriter",
+    //  "label": "Camera 3",
+    //  "address": "10.101.0.172"
+    //},
+    //"4": {
+    //  "kind": "PtzWriter",
+    //  "label": "Camera 4",
+    //  "address": "10.101.0.173"
+    //}
   },
   "cues": {
     "0": {
@@ -33,6 +49,7 @@
         {
           "operation": {
             "$type": "Zoom",
+            "label": "Zoom 1 and 2",
             "speed": 1000
           },
           "writers": [ 1, 2 ]
@@ -40,6 +57,7 @@
         {
           "operation": {
             "$type": "Zoom",
+            "label": "Zoom 3 and 4",
             "speed": 100
           },
           "writers": [ 3, 4 ]
@@ -52,6 +70,7 @@
         {
           "operation": {
             "$type": "PanType2",
+            "label":  "Pan Left",
             "start": {
               "pan": 0.0, //  pan: 0 is forward
               "tilt": 0.0 // tilt: 0 is forward
@@ -71,6 +90,7 @@
         {
           "operation": {
             "$type": "Move",
+            "label": "Move to straight forward",
             "location": {
               "pan": 0.0, //  pan: 0 is forward
               "tilt": 0.0 // tilt: 0 is forward
