@@ -20,22 +20,22 @@
     //"1": {
     //  "kind": "PtzWriter",
     //  "label": "Camera 1",
-    //  "address": "10.101.0.174"
+    //  "address": "10.101.0.171"
     //},
     //"2": {
     //  "kind": "PtzWriter",
     //  "label": "Camera 2",
-    //  "address": "10.101.0.171"
+    //  "address": "10.101.0.174"
     //},
     //"3": {
     //  "kind": "PtzWriter",
     //  "label": "Camera 3",
-    //  "address": "10.101.0.172"
+    //  "address": "10.101.0.173"
     //},
     //"4": {
     //  "kind": "PtzWriter",
     //  "label": "Camera 4",
-    //  "address": "10.101.0.173"
+    //  "address": "10.101.0.172"
     //}
   },
   "cues": {

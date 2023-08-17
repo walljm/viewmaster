@@ -153,24 +153,24 @@
             tabPage1.Padding = new Padding(7, 7, 7, 7);
             tabPage1.Size = new Size(1146, 1214);
             tabPage1.TabIndex = 0;
-            tabPage1.Text = "Cue Details";
+            tabPage1.Text = " Cue Details ";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // ctlOperations
             // 
-            ctlOperations.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ctlOperations.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ctlOperations.FormattingEnabled = true;
             ctlOperations.ItemHeight = 50;
-            ctlOperations.Location = new Point(20, 259);
+            ctlOperations.Location = new Point(20, 174);
             ctlOperations.Margin = new Padding(4, 4, 4, 4);
             ctlOperations.Name = "ctlOperations";
-            ctlOperations.Size = new Size(936, 554);
+            ctlOperations.Size = new Size(1115, 1004);
             ctlOperations.TabIndex = 7;
             // 
             // lblOperations
             // 
             lblOperations.AutoSize = true;
-            lblOperations.Location = new Point(13, 190);
+            lblOperations.Location = new Point(11, 115);
             lblOperations.Margin = new Padding(4, 0, 4, 0);
             lblOperations.Name = "lblOperations";
             lblOperations.Size = new Size(204, 50);
@@ -180,16 +180,16 @@
             // ctlLabel
             // 
             ctlLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ctlLabel.Location = new Point(147, 110);
+            ctlLabel.Location = new Point(426, 26);
             ctlLabel.Margin = new Padding(4, 4, 4, 4);
             ctlLabel.Name = "ctlLabel";
-            ctlLabel.Size = new Size(981, 56);
+            ctlLabel.Size = new Size(709, 56);
             ctlLabel.TabIndex = 3;
             // 
             // lblLabel
             // 
             lblLabel.AutoSize = true;
-            lblLabel.Location = new Point(28, 110);
+            lblLabel.Location = new Point(302, 26);
             lblLabel.Margin = new Padding(4, 0, 4, 0);
             lblLabel.Name = "lblLabel";
             lblLabel.Size = new Size(116, 50);
@@ -222,9 +222,9 @@
             tabPage2.Margin = new Padding(7, 7, 7, 7);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(7, 7, 7, 7);
-            tabPage2.Size = new Size(975, 1203);
+            tabPage2.Size = new Size(1146, 1214);
             tabPage2.TabIndex = 1;
-            tabPage2.Text = "Cameras";
+            tabPage2.Text = " Cameras ";
             tabPage2.UseVisualStyleBackColor = true;
             // 
             // grdCameras
@@ -237,7 +237,7 @@
             grdCameras.Name = "grdCameras";
             grdCameras.RowHeadersWidth = 62;
             grdCameras.RowTemplate.Height = 60;
-            grdCameras.Size = new Size(961, 1189);
+            grdCameras.Size = new Size(1132, 1200);
             grdCameras.TabIndex = 0;
             grdCameras.CellDoubleClick += this.GrdCameras_CellDoubleClick;
             // 
